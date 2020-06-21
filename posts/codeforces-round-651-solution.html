@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="z4dtBuOaMDpmXVa3jxOuXTFFJE_TTb98hK4GMQDb2kE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"sq-zhang.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="A. Maximum GCD给定 1 - n 个整数，两个不同的整数组成一个数对，每一数对存在一个最大公约数。 求所有数对中最大公约数的最大值。  最大公约数指能够整除多个整数的最大正整数  思考认识最大公约数大概是小学的时候了，但是不妨碍我们回忆一下，如何求解两个数的最大公约数？ 欧几里得算法欧几里得算法也叫辗转相除法，它的原理依赖于欧几里得提出的定理：  定理：gcd(a, b) &#x3D;&#x3D; gcd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Codeforces Round 651 题解">
+<meta property="og:url" content="https://sq-zhang.github.io/posts/codeforces-round-651-solution.html">
+<meta property="og:site_name" content="浅前的博客">
+<meta property="og:description" content="A. Maximum GCD给定 1 - n 个整数，两个不同的整数组成一个数对，每一数对存在一个最大公约数。 求所有数对中最大公约数的最大值。  最大公约数指能够整除多个整数的最大正整数  思考认识最大公约数大概是小学的时候了，但是不妨碍我们回忆一下，如何求解两个数的最大公约数？ 欧几里得算法欧几里得算法也叫辗转相除法，它的原理依赖于欧几里得提出的定理：  定理：gcd(a, b) &#x3D;&#x3D; gcd">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-21T06:02:45.000Z">
+<meta property="article:modified_time" content="2020-06-21T12:45:58.533Z">
+<meta property="article:author" content="sq-zhang">
+<meta property="article:tag" content="Codeforces">
+<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="Competive Programming">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://sq-zhang.github.io/posts/codeforces-round-651-solution.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Codeforces Round 651 题解 | 浅前的博客</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-170167173-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a615cbf4cd9d874e95fd0cb47ab3841a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">浅前的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">If you can’t explain it simply, you don’t understand it well enough.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">5</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3NxLXpoYW5n" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sq-zhang.github.io/posts/codeforces-round-651-solution.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="sq-zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="浅前的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Codeforces Round 651 题解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-21 14:02:45 / 修改时间：20:45:58" itemprop="dateCreated datePublished" datetime="2020-06-21T14:02:45+08:00">2020-06-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/codeforces-round-651-solution.html" class="post-meta-item leancloud_visitors" data-flag-title="Codeforces Round 651 题解" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>21 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="A-Maximum-GCD"><a href="#A-Maximum-GCD" class="headerlink" title="A. Maximum GCD"></a>A. Maximum GCD</h1><p>给定 1 - n 个整数，两个不同的整数组成一个数对，每一数对存在一个最大公约数。</p>
+<p>求所有数对中最大公约数的最大值。</p>
+<blockquote>
+<p>最大公约数指能够整除多个整数的最大正整数</p>
+</blockquote>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>认识最大公约数大概是小学的时候了，但是不妨碍我们回忆一下，如何求解两个数的最大公约数？</p>
+<h3 id="欧几里得算法"><a href="#欧几里得算法" class="headerlink" title="欧几里得算法"></a>欧几里得算法</h3><p>欧几里得算法也叫辗转相除法，它的原理依赖于欧几里得提出的定理：</p>
+<blockquote>
+<p>定理：gcd(a, b) == gcd(b, a mod b)</p>
+</blockquote>
+<p>欧几里得算法的时间复杂度是O(log n)。</p>
+<p>当我们求 gcd(a, b) 时，会遇到两种情况：</p>
+<ul>
+<li>a &lt; b，此时 gcd(a, b) = gcd(b, a)</li>
+<li>a &gt;= b，此时 gcd(a, b) = gcd(b, a mod b)</li>
+</ul>
+<p>a mod b 的操作会让 a 至少减半，意味着这一操作最多发生 O(log n) 次，第一种情况发生后接着一定会发生第二种情况，所以总体的复杂度是 O(log n)。</p>
+<p>欧几里得算法在效率上已经很好了，这指的是它理论上的时间复杂度。但不能忽略的是，取模运算效率是较低的。现代计算机在计算 64 位以下的整数模时，只需要几个指令。但对超过 64 位的数，需要采取类似于多位数除法手算过程的试商法，需要消耗更多 CPU 时间。</p>
+<p>抛弃除法和取模的一种替代办法是直接用减法实现。</p>
+<p>另一种方案就是 Stein 算法。</p>
+<h3 id="Stein-算法"><a href="#Stein-算法" class="headerlink" title="Stein 算法"></a>Stein 算法</h3><p>Stein 算法 只有整数的位移和加减法，它的原来依赖于公式：gcd(ka, kb) = k * gcd(a, b)。特殊的，当 k = 2 时，可以用向右位移 1 位来代替除法操作。当 a，b 都是奇数时，再采用减法实现取模的操作。</p>
+<div class="tabs" id="求解两数的最大公约数"><ul class="nav-tabs"><li class="tab active"><a href="#求解两数的最大公约数-1">欧几里得算法</a></li><li class="tab"><a href="#求解两数的最大公约数-2">欧几里得算法（除法版）</a></li><li class="tab"><a href="#求解两数的最大公约数-3">Stein 算法</a></li></ul><div class="tab-content"><div class="tab-pane active" id="求解两数的最大公约数-1"><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> gcd(<span class="built_in">int</span> a, <span class="built_in">int</span> b) &#123;</span><br><span class="line">    <span class="keyword">while</span>(b != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">int</span> t = b;</span><br><span class="line">        b = a % b;</span><br><span class="line">        a = t;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="求解两数的最大公约数-2"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gcd</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(a != b) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a &gt; b) &#123;</span><br><span class="line">            a -= b;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            b -= a;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="求解两数的最大公约数-3"><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> gcd(<span class="built_in">int</span> a, <span class="built_in">int</span> b) &#123;</span><br><span class="line">    <span class="keyword">if</span> (a == <span class="number">0</span>) <span class="keyword">return</span> b;</span><br><span class="line">    <span class="keyword">if</span> (b == <span class="number">0</span>) <span class="keyword">return</span> a;</span><br><span class="line">    <span class="keyword">if</span> (a % <span class="number">2</span> == <span class="number">0</span> &amp;&amp; b % <span class="number">2</span> == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span> * gcd(a &gt;&gt; <span class="number">1</span>, b &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (a % <span class="number">2</span> == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> gcd(a &gt;&gt; <span class="number">1</span>, b);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (b % <span class="number">2</span> == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> gcd(a, b &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> gcd(Math.abs(a - b), Math.min(a, b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<p>回过头来看这题，求解 gcd(a, b) 的最大值，其中 1 &lt;= a &lt; b &lt;= n。</p>
+<p>暴力的解法是遍历所有数对（$C_n^2$ 对），依次求出最大公约数，取最大值。</p>
+<p>时间复杂度是 $O(n^2 * \log(max(a, b)))$，其中 $\log(max(a, b))$ 是计算最大公约数的复杂度。</p>
+<p><strong>如何优化暴力解法呢？</strong></p>
+<p>一种优化方案是借助因数分解的方法，记录下 [1, n] 里每个数的所有因数，如果存在两个数有同一个因数，那么这个因数是一个公因数，最后从大到小判断即可找出最大公约数。</p>
+<p>对于一个数 a，求解所有因数的时间复杂度是$O(\sqrt{a})$。算法的整体时间复杂度是$O(n*\sqrt{n})$;</p>
+<p>不幸的是，上述两种算法提交到 CodeForces 均在 test3 测试集上超时了。</p>
+<p>换一种思路，可不可以从大到小检查每个数是否是某两个数的公因数？</p>
+<p>答案是可以的，问题是如何才能高效的检查？</p>
+<p>假设 g 是一个公因数，那么必定存在不大于 n 的数 kg（k &gt; 1）。所以对每一个数 a，只要判断在 [1, n] 范围内是否存在 ka。（详细算法见代码，该算法可以应用到求多个数的最大公约数）</p>
+<p><strong>这是最佳答案吗？</strong></p>
+<p>再进一步分析，假设 g 是最大公约数的最大值，那么另一个数的最小值是 2 * g。于是有 2 * g &lt;= n, $g &lt;= \frac{n}{2}$。我们总可以取 $\lfloor \frac{n}{2} \rfloor$ 和 $2 * \lfloor \frac{n}{2} \rfloor$ 得到这样一个最大公约数为 g 的数对，所以 g = $\lfloor \frac{n}{2} \rfloor$（没想到答案是这样的！！）。</p>
+<h2 id="AC-代码"><a href="#AC-代码" class="headerlink" title="AC 代码"></a>AC 代码</h2><div class="tabs" id="a.-maximun-gcd"><ul class="nav-tabs"><li class="tab active"><a href="#a.-maximun-gcd-1">解法一</a></li><li class="tab"><a href="#a.-maximun-gcd-2">解法二</a></li></ul><div class="tab-content"><div class="tab-pane active" id="a.-maximun-gcd-1"><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    static <span class="keyword">final</span> FS sc = new FS(); <span class="comment">// 封装输入类</span></span><br><span class="line">    static <span class="keyword">final</span> PrintWriter pw = new PrintWriter(System.<span class="keyword">out</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> static <span class="built_in">void</span> main(String[] args) &#123;</span><br><span class="line">        <span class="built_in">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span> (t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">int</span> n = sc.nextInt();</span><br><span class="line">            <span class="built_in">int</span>[] divisors = new <span class="built_in">int</span>[n + <span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>;i &lt;= n;i++) &#123;</span><br><span class="line">                divisors[i]++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">int</span> res = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> i = n;i &gt;= <span class="number">1</span>;i--) &#123;</span><br><span class="line">                <span class="built_in">int</span> j = i, counter = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span>(j &lt;= n) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (divisors[j] &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        counter += divisors[j];</span><br><span class="line">                    &#125;</span><br><span class="line">                    j += i;</span><br><span class="line">                    <span class="keyword">if</span> (counter == <span class="number">2</span>) &#123;</span><br><span class="line">                        res = i;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (res &gt; <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            pw.println(res);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="a.-maximun-gcd-2"><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS(); <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span> (t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> n = sc.nextInt();</span><br><span class="line">            pw.<span class="built_in">println</span>(n / <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h1 id="B-GCD-Compression"><a href="#B-GCD-Compression" class="headerlink" title="B. GCD Compression"></a>B. GCD Compression</h1><p>给定有 2n 个正整数的数组 a，现在要将它压缩成 n - 1 个数的数组 b。</p>
+<p>首先随机去除两个数，然后不放回的随机选两个数相加作为 b 的元素。</p>
+<p>b 最后应该满足条件：所有元素的最大公约数大于 1。</p>
+<p>输出一个满足的方案。</p>
+<h2 id="思考-1"><a href="#思考-1" class="headerlink" title="思考"></a>思考</h2><p>选取两个数相加后，再求最大公约数。可能的情况有 $C_n^2 * C_{n - 2}^2$，遍历所有解空间将是灾难级的复杂度。</p>
+<p>如果无法遍历上优化，从另一个角度想，有没有稳定的生成方案？</p>
+<p>容易想到的是，如果 b 数组是偶数数组，那么是满足题目条件的。</p>
+<p>我们可以将奇数和偶数分开，使相加后的 b 数组的元素都是偶数。如果奇数个数或偶数个数是奇数，可以选择丢弃一个，最终得到 n - 1 个偶数。</p>
+<p>最终算法的时间复杂度是 O(n)。</p>
+<h2 id="AC-代码-1"><a href="#AC-代码-1" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span> (t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> n = sc.nextInt();</span><br><span class="line">            List&lt;Integer&gt; odd = <span class="keyword">new</span> ArrayList&lt;&gt;(),</span><br><span class="line">                    even = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= <span class="number">2</span> * n;i++) &#123;</span><br><span class="line">                <span class="keyword">int</span> num = sc.nextInt();</span><br><span class="line">                <span class="keyword">if</span> (num % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                    even.add(i);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    odd.add(i);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; odd.<span class="built_in">size</span>() - <span class="number">1</span>;i += <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count == n - <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                pw.<span class="built_in">println</span>(odd.<span class="built_in">get</span>(i) + <span class="string">" "</span> + odd.<span class="built_in">get</span>(i + <span class="number">1</span>));</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; even.<span class="built_in">size</span>() - <span class="number">1</span>;i += <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count == n - <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                pw.<span class="built_in">println</span>(even.<span class="built_in">get</span>(i) + <span class="string">" "</span> + even.<span class="built_in">get</span>(i + <span class="number">1</span>));</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="C-Number-Game"><a href="#C-Number-Game" class="headerlink" title="C. Number Game"></a>C. Number Game</h1><p>Ashishgup 和 FastestFinger 玩游戏，初始数字是 n。<br>对 n 可以有两种操作：</p>
+<ul>
+<li>除以一个 n 的大于 1 的奇数因子（可以包括自身）</li>
+<li>减 1，当 n &gt; 1 时</li>
+</ul>
+<p>当轮到谁无法行动时，就输了。Ashishgup 先行动。</p>
+<p>输出赢家（Ashishgup 或 FastestFinger）</p>
+<h2 id="思考-2"><a href="#思考-2" class="headerlink" title="思考"></a>思考</h2><p>输的一方是什么情况下必输呢？</p>
+<p>很显然，当遇到 1 的时候，因为如果大于 1，总是可以做减 1 操作。</p>
+<p>可以从这一结论推出其他结果吗？</p>
+<p>这是一题典型的博弈问题，总是可以通过动态规划来求解。假设我能将数字变为 1，我就赢了。推广下去，如果我们可以走到对方输的那一个数字，我就赢了。</p>
+<p>用 dp[i] 表示 Ashishgup 的结果，true 为 Ashishgup 赢。那么只要 Ashishgup 可以将 i 变为 j 且 dp[j] 为false，Ashishgup 就能赢。</p>
+<p>Ashishgup 能否找到 j，取决于是否存在奇数因子或 dp[i - 1]。所以，当 n 为奇数且n &gt; 1 时，Ashishgup 必赢，因为 i 就是要找的 j。其余可以通过遍历寻找 i 的奇数因子。</p>
+<p>该算法的时间复杂度是 $O(n * \sqrt{n})$，其中 $\sqrt{n}$ 为寻找奇数因子的复杂度。</p>
+<p>不幸的是，该算法在 Codeforces 上超时了。如果用 dp 数组存储还会超出空间限制。</p>
+<p>再继续深挖，当 n 为偶数时，如果不存在大于 1 的奇数因子，那么它的形式为 $2^x$。Ashishgup 只能减 1，n 变为奇数。根据上面的分析，Ashishgup 输了。（特殊情况，x = 1 时，Ashishgup 赢了）</p>
+<p>那么只剩最后一种情况，当 n 为偶数时且存在奇数因子，Ashishgup 可以除去最大的奇数因子，使 n 变为 2^x 的形式（因为 x &gt; 1，所以 n 必须被 4 整除），此时 Ashishgup 必赢。</p>
+<p>若 n 不是 4的整数倍，n 的形式为 2 * m，m 如果是质数，Ashishgup 只能除以 m 或减 1，Ashishgup 都输了；如果 m 不是质数，Ashishgup 除以 m 的一个因子，使 FastestFinger 遇到 2 * m 的情况，Ashishgup 赢了。</p>
+<p>综上总结，只有以下几种情况 Ashishgup 输了：</p>
+<ol>
+<li>n == 1</li>
+<li>n 是 2 的次方</li>
+<li>n &gt; 2 且 n % 2 == 0 且 n % 4 != 0 且 n / 2 是质数</li>
+</ol>
+<p>算法时间复杂度是 $O(\sqrt{n})$，也是判断是否质数的时间</p>
+<div class="note warning">
+            <p>判断是否质数不能从 2 遍历到 n，否则会超时，而且要包含 $\sqrt{n}$，否则当 n 为平方数时出错。  </p>
+          </div>
+
+
+<h2 id="AC-代码-2"><a href="#AC-代码-2" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="comment">// 封装输入类</span></span><br><span class="line">    static <span class="keyword">final</span> FS sc = new FS();</span><br><span class="line">    static <span class="keyword">final</span> PrintWriter pw = new PrintWriter(System.<span class="keyword">out</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> static <span class="built_in">bool</span>ean isPrime(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">2</span>;i &lt;= Math.sqrt(n);i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (n % i == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> static <span class="built_in">void</span> main(String[] args) &#123;</span><br><span class="line">        <span class="built_in">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span>(t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">int</span> n = sc.nextInt();</span><br><span class="line">            <span class="built_in">bool</span>ean lose = (n == <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span>(n &gt; <span class="number">2</span> &amp;&amp; n % <span class="number">2</span> == <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>((n &amp; (n - <span class="number">1</span>)) == <span class="number">0</span>) &#123;</span><br><span class="line">                    lose = <span class="literal">true</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span>(n % <span class="number">4</span> != <span class="number">0</span> &amp;&amp; isPrime(n / <span class="number">2</span>)) &#123;</span><br><span class="line">                    lose = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            pw.println(lose ? <span class="string">"FastestFinger"</span> : <span class="string">"Ashishgup"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="D-Odd-Even-Subsequence"><a href="#D-Odd-Even-Subsequence" class="headerlink" title="D. Odd-Even Subsequence"></a>D. Odd-Even Subsequence</h1><p>给定大小为 n 的数组，它的子序列 s 的价值表示为以下两个数的最小值：</p>
+<ul>
+<li>所有 s 的偶数位上的最大值</li>
+<li>所有 s 的奇数位上的最大值</li>
+</ul>
+<p>比如 s = {7, 5, 6}，那么 cost = min(max(7, 6), max(5)) = min(7, 5) = 5。</p>
+<p>求所有大小为 k 的子序列的最小价值。</p>
+<h2 id="思考-3"><a href="#思考-3" class="headerlink" title="思考"></a>思考</h2><p>要仔细看题目，刚开始以为奇偶位是以原数组位准，其实是以子序列为准。</p>
+<p>假设 s 的偶数位上的最大值为 maxEven，对应的奇数位为 maxOdd。要想让 maxEven 和 maxOdd 的较小值最小，不妨将大值尽量放在偶数位，小值尽量放在奇数位。这样可以保证始终有 maxOdd &lt; maxEven。</p>
+<p><strong>那要如何去找到这样的长度为 k 的子序列呢？</strong></p>
+<p>如果遍历各个长度为 k 的子序列的话，可能的情况有 $C_n,^k$ 种，再遍历 k 位找到最小价值，时间复杂度为 $O(kn^2)$。</p>
+<p>显然，遍历不是正确的方向。</p>
+<p>假设给定价值 x，我们能够构造出长度大于等于 k 的子序列，我们就能够慢慢逼近我们要的最小价值。构造子序列的方法与上述 maxOdd &lt; maxEven 有关：</p>
+<ul>
+<li>对于偶数位，不关心数的大小</li>
+<li>对于奇数位，只有比 x 小的数才算，保证最终 maxOdd &lt;= x</li>
+</ul>
+<p>逼近最小价值可以使用二分搜索算法。</p>
+<p>最终算法复杂度为 $O(n\log(n))$。</p>
+<h2 id="AC-代码-3"><a href="#AC-代码-3" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="comment">// 封装输入类</span></span><br><span class="line">    static <span class="keyword">final</span> FS sc = new FS();</span><br><span class="line">    static <span class="keyword">final</span> PrintWriter pw = new PrintWriter(System.<span class="keyword">out</span>);</span><br><span class="line">    static  <span class="built_in">int</span> n, k;</span><br><span class="line">    static  <span class="built_in">int</span>[] nums;</span><br><span class="line">    <span class="keyword">public</span> static <span class="built_in">void</span> main(String[] args) &#123;</span><br><span class="line">        n = sc.nextInt();</span><br><span class="line">        k = sc.nextInt();</span><br><span class="line">        nums = new <span class="built_in">int</span>[n];</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i &lt; n;i++) &#123;</span><br><span class="line">            nums[i] = sc.nextInt();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> l = <span class="number">1</span>, r = (<span class="built_in">int</span>) <span class="number">10e9</span>;</span><br><span class="line">        <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">            <span class="built_in">int</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span> (search(mid, <span class="number">0</span>) || search(mid, <span class="number">1</span>)) &#123;</span><br><span class="line">                r = mid;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                l = mid + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.println(l);</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> static <span class="built_in">bool</span>ean search(<span class="built_in">int</span> mid, <span class="built_in">int</span> pos) &#123;</span><br><span class="line">        <span class="built_in">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i &lt; n;i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (pos == <span class="number">0</span>) &#123;</span><br><span class="line">                count++;</span><br><span class="line">                pos ^= <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[i] &lt;= mid) &#123;</span><br><span class="line">                count++;</span><br><span class="line">                pos ^= <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count &gt;= k;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="E-Binary-Subsequence-Rotation"><a href="#E-Binary-Subsequence-Rotation" class="headerlink" title="E. Binary Subsequence Rotation"></a>E. Binary Subsequence Rotation</h1><p>s 和 t 是两个二进制字符串，长度为 n。</p>
+<p>在一次旋转中可以选取任意位置的节点一起顺时针旋转一位。</p>
+<p>比如 s = 1110100，点集合是 {2, 6, 7}（起始为 1），旋转后的字符串为 s = 1010110。</p>
+<p>求将 s 变为 t 需要旋转的最少次数。</p>
+<h2 id="思考-4"><a href="#思考-4" class="headerlink" title="思考"></a>思考</h2><p>明显的，如果 s 和 t 的 0 和 1 的个数不相等，返回 -1；否则一定能将 s 旋转为 t。</p>
+<p><strong>如何保证旋转次数最少？</strong></p>
+<p>因为只有选中的位置才会旋转，所以一个位置最多旋转一次。如果能一起旋转的位置都一起旋转，即可保证旋转次数最少。</p>
+<p><strong>那怎样的位置可以一起旋转？</strong></p>
+<p>答案是间隔差异的位置，最终选中的模式应该是 010101 或 101010 这样间隔的。</p>
+<p>假设 a[i] 表示 s[i] - t[i]，当 s[i] = t[i] 时，a[i] = 0，否则 a[i] = 1 或 -1。</p>
+<p>现在问题可以转化为将 a 中的元素按 1, -1, 1 这样串起来，最少需要多少串才能包含所有非 0 元素？</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9jb2RlZm9yY2VzLmNvbS9ibG9nL2VudHJ5Lzc5MTA3">官方题解<i class="fa fa-external-link-alt"></i></span> 给出的解决方案：a 的最大子数组绝对值和就是答案。</p>
+<p>题解中还给了详细的证明，有时间再来学习它的证明（@TODO）。</p>
+<p>算法时间复杂度是 O(n)。</p>
+<h2 id="AC-代码-4"><a href="#AC-代码-4" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = sc.nextInt();</span><br><span class="line">        <span class="keyword">String</span> s = sc.next();</span><br><span class="line">        <span class="keyword">String</span> t = sc.next();</span><br><span class="line">        <span class="keyword">int</span>[] diff = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++) &#123;</span><br><span class="line">            diff[i] = s.charAt(i) - t.charAt(i);</span><br><span class="line">            sum += diff[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (sum != <span class="number">0</span>) &#123;</span><br><span class="line">            pw.<span class="built_in">println</span>(<span class="number">-1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">int</span> cur1 = <span class="number">0</span>, cur2 = <span class="number">0</span>, max1 = <span class="number">0</span>, max2 = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++) &#123;</span><br><span class="line">                cur1 += diff[i];</span><br><span class="line">                cur2 -= diff[i];</span><br><span class="line">                max1 = Math.<span class="built_in">max</span>(max1, cur1);</span><br><span class="line">                max2 = Math.<span class="built_in">max</span>(max2, cur2);</span><br><span class="line">                cur1 = Math.<span class="built_in">max</span>(cur1, <span class="number">0</span>);</span><br><span class="line">                cur2 = Math.<span class="built_in">max</span>(cur2, <span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            pw.<span class="built_in">println</span>(Math.<span class="built_in">max</span>(max1, max2));</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="F-The-Hidden-Pair"><a href="#F-The-Hidden-Pair" class="headerlink" title="F. The Hidden Pair"></a>F. The Hidden Pair</h1><p>这是一道交互题。</p>
+<p>给定 n 个节点的树，节点的值为 [1, n]。输入 n 和 n - 1 条边。Ayush 和 Ashish 各选了一个节点作为隐藏节点。你的任务是找出这两个隐藏节点。</p>
+<p>你可以做如下查询：</p>
+<ul>
+<li>输入节点列表，返回两个值：一个是距离两个隐藏节点的距离和最小的节点，另一个值是该距离和。</li>
+</ul>
+<p>你最多做 14 次查询。（Hard 版最多 11 次）</p>
+<h2 id="思考-5"><a href="#思考-5" class="headerlink" title="思考"></a>思考</h2><p>这题没什么思路，参考<span class="exturl" data-url="aHR0cHM6Ly9jb2RlZm9yY2VzLmNvbS9ibG9nL2VudHJ5Lzc5MTA3">官方题解<i class="fa fa-external-link-alt"></i></span>（还没完全吃透，暂不给出代码@TODO）。</p>
+<p><strong>Key Idea：</strong> 通过一次查询找到两个隐藏节点中间的那个节点 r，然后以该节点为 root 节点，再通过二分搜索找到其中一个隐藏节点。</p>
+<p>首先，如果查询所有节点，那么返回的节点一定是两个隐藏节点中间的那个节点 r，返回的距离为 l。</p>
+<p>如果我们能找到一个隐藏节点 a，另外一个节点 b 可以查询离 a 距离为 l 的所有节点，返回的肯定就是 b 节点。</p>
+<p>我们可以通过二分搜索找到 a。假设我们查询离根节点 r 为 d 的所有节点，返回的值是 x。</p>
+<ul>
+<li>如果 a 和 b 中有一个节点距离 r 大于等于 d，那么 x 肯定等于 l</li>
+<li>否则 x 肯定大于 l</li>
+</ul>
+<p>所以我们可以二分搜索 d 来找到 a。这需要 10 次 查询因为最大的深度可能是 n。</p>
+<p>然后再需要一次查询找到 b。总共需要 12 次（只能通过 Easy 版）。</p>
+<p>另外注意到，a 和 b 距离 r 的和为 l，那么肯定至少有一个节点距离 r 的值大于等于 l / 2（向上取整）。所以二分搜索的下届可以设为 l / 2。</p>
+<p>这样可以减少一次搜索，只需 11 次（满足Hard 版本）。</p>
+<p>整体的时间复杂度是O(n^2)。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>如发现错误或遗漏，请在下方评论或联系我</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="sq-zhang 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="sq-zhang 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>sq-zhang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://sq-zhang.github.io/posts/codeforces-round-651-solution.html" title="Codeforces Round 651 题解">https://sq-zhang.github.io/posts/codeforces-round-651-solution.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Codeforces/" rel="tag"><i class="fa fa-tag"></i> Codeforces</a>
+              <a href="/tags/Algorithm/" rel="tag"><i class="fa fa-tag"></i> Algorithm</a>
+              <a href="/tags/Competive-Programming/" rel="tag"><i class="fa fa-tag"></i> Competive Programming</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/java-dynamic-proxy.html" rel="prev" title="Java 动态代理">
+      <i class="fa fa-chevron-left"></i> Java 动态代理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#A-Maximum-GCD"><span class="nav-number">1.</span> <span class="nav-text">A. Maximum GCD</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">1.1.</span> <span class="nav-text">思考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#欧几里得算法"><span class="nav-number">1.1.1.</span> <span class="nav-text">欧几里得算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stein-算法"><span class="nav-number">1.1.2.</span> <span class="nav-text">Stein 算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码"><span class="nav-number">1.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B-GCD-Compression"><span class="nav-number">2.</span> <span class="nav-text">B. GCD Compression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-1"><span class="nav-number">2.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-1"><span class="nav-number">2.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-Number-Game"><span class="nav-number">3.</span> <span class="nav-text">C. Number Game</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-2"><span class="nav-number">3.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-2"><span class="nav-number">3.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#D-Odd-Even-Subsequence"><span class="nav-number">4.</span> <span class="nav-text">D. Odd-Even Subsequence</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-3"><span class="nav-number">4.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-3"><span class="nav-number">4.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#E-Binary-Subsequence-Rotation"><span class="nav-number">5.</span> <span class="nav-text">E. Binary Subsequence Rotation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-4"><span class="nav-number">5.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-4"><span class="nav-number">5.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#F-The-Hidden-Pair"><span class="nav-number">6.</span> <span class="nav-text">F. The Hidden Pair</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-5"><span class="nav-number">6.1.</span> <span class="nav-text">思考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sq-zhang"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">sq-zhang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sq-zhang</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">26k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:06</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"iFCGO3MEboacRuV5wDmgpaF0-gzGzoHsz","app_key":"672zyRsPmDRQdGx2jwJUaS6V","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://sq-zhang.github.io/posts/codeforces-round-651-solution.html',]
+      });
+      });
+  </script>
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://sq-zhang.github.io/posts/codeforces-round-651-solution.html";
+    this.page.identifier = "posts/codeforces-round-651-solution.html";
+    this.page.title = "Codeforces Round 651 题解";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://wwwshiqianme.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
