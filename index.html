@@ -147,7 +147,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">5</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -213,6 +213,181 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sq-zhang.github.io/posts/codeforces-round-653-solutions.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="sq-zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="浅前的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/codeforces-round-653-solutions.html" class="post-title-link" itemprop="url">Codeforces Round 653 题解</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-29 22:35:45 / 修改时间：22:59:14" itemprop="dateCreated datePublished" datetime="2020-06-29T22:35:45+08:00">2020-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/codeforces-round-653-solutions.html" class="post-meta-item leancloud_visitors" data-flag-title="Codeforces Round 653 题解" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="A-Required-Remainder"><a href="#A-Required-Remainder" class="headerlink" title="A. Required Remainder"></a>A. Required Remainder</h1><p>给定整数 x, y, n。返回最大的 k ($0 \le k \le n$) 使得 k mod x = y。<br>其中 $2 \le x \le 1e9$；$0 \le y &lt; x;y \leq n &lt; 1e9$</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>k mod x = y 意味着存在一个数 m，使得 m * x + y = k；</p>
+<p>要想令 k 最大，m 的取值越大越好，在 k 的范围内，m 的最大取值为 n / x 或 n / x - 1，取决于 m * x + y 是否大于 n。</p>
+<p>时间复杂度是 O(1)。</p>
+<h2 id="AC-代码"><a href="#AC-代码" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span>(t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> x = sc.nextInt(), y = sc.nextInt(), n = sc.nextInt();</span><br><span class="line">            <span class="keyword">int</span> res = (n / x) * x + y;</span><br><span class="line">            <span class="keyword">if</span> (res &gt; n) &#123;</span><br><span class="line">                res -= x;</span><br><span class="line">            &#125;</span><br><span class="line">            pw.<span class="built_in">println</span>(res);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="B-Multiply-by-2-divide-by-6"><a href="#B-Multiply-by-2-divide-by-6" class="headerlink" title="B. Multiply by 2, divide by 6"></a>B. Multiply by 2, divide by 6</h1><p>给定整数 n，在一次行动中，可以乘 2，也可以除 6（可以整除的话）。</p>
+<p>返回使 n 变到 1 需要的最少次数。（如果不可能则返回 -1）</p>
+<h2 id="思考-1"><a href="#思考-1" class="headerlink" title="思考"></a>思考</h2><p>n 变到 1 的唯一路径是不断除 6。除一次 6 可以去掉一个 2 和一个 3。</p>
+<p>如果 n 包含 2 和 3 以外的因子，返回 -1.</p>
+<p>所以 n 可以表示为 $2^i * 3^j$，最短路径是先乘以 2 令 i 补齐到 j，再不断除以 6。</p>
+<p>如果 i &gt; j，就不可能将 3 除尽了，返回 -1。</p>
+<p>最终结果为 $Math.max(i, j) - Math.abs(i - j) = 2 * j - i$。</p>
+<p>时间复杂度是 $O(\log{n})$。</p>
+<h2 id="AC-代码-1"><a href="#AC-代码-1" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    static <span class="keyword">final</span> FS sc = new FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    static <span class="keyword">final</span> PrintWriter pw = new PrintWriter(System.<span class="keyword">out</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> static <span class="built_in">void</span> main(String[] args) &#123;</span><br><span class="line">        <span class="built_in">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span>(t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">int</span> n = sc.nextInt();</span><br><span class="line">            <span class="built_in">int</span> two = <span class="number">0</span>, three = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span>(n % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                n /= <span class="number">2</span>;</span><br><span class="line">                two++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">while</span> (n % <span class="number">3</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                n /= <span class="number">3</span>;</span><br><span class="line">                three++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (n != <span class="number">1</span> || two &gt; three) &#123;</span><br><span class="line">                pw.println(<span class="number">-1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                pw.println(three * <span class="number">2</span> - two);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="C-Move-Brackets"><a href="#C-Move-Brackets" class="headerlink" title="C. Move Brackets"></a>C. Move Brackets</h1><p>给定一个长度为偶数 n 的字符串 s，s 包含 n/2 的左括号 ‘(‘ 和右括号 ‘)’。</p>
+<p>有效的 s 的定义为：</p>
+<ul>
+<li>“()” 是有效的</li>
+<li>如果 s 是有效的，那么 “(“ + s + “)” 也是有效的</li>
+<li>如果 s 和 t 是有效的，那么 s + t 也是有效的</li>
+</ul>
+<p>在一次行动中可以将任意一个括号移动最前面或最后面。</p>
+<p>求将 s 变为有效的所需的最少行动次数。</p>
+<h2 id="思考-2"><a href="#思考-2" class="headerlink" title="思考"></a>思考</h2><p>一个无效 s 的出现意味着右括号的数量超过了左括号的数量，这时我们总可以将右括号移到最后面，将 s 变为有效。</p>
+<p>括号匹配的问题一般会用到栈，这题由于只关心是否有效，可用标志位代替栈。（0 表示空栈，&gt; 0 表示左括号的数量）。</p>
+<p>时间复杂度是 O(n)。</p>
+<h2 id="AC-代码-2"><a href="#AC-代码-2" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span> (t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> n = sc.nextInt();</span><br><span class="line">            StringBuilder s = <span class="keyword">new</span> StringBuilder(sc.next());</span><br><span class="line">            Stack&lt;Character&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;(); <span class="comment">// int state = 0;</span></span><br><span class="line">            <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; s.length();i++) &#123;</span><br><span class="line">                <span class="keyword">char</span> c = s.charAt(i);</span><br><span class="line">                <span class="keyword">if</span> (c == <span class="string">'('</span>) &#123;</span><br><span class="line">                    <span class="built_in">stack</span>.push(c); <span class="comment">// state++;</span></span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">stack</span>.isEmpty()) &#123; <span class="comment">// state == 0</span></span><br><span class="line">                    res++;</span><br><span class="line">                    s.append(c);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="built_in">stack</span>.pop(); <span class="comment">// state--;</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            pw.<span class="built_in">println</span>(res);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="D-Zero-Remainder-Array"><a href="#D-Zero-Remainder-Array" class="headerlink" title="D. Zero Remainder Array"></a>D. Zero Remainder Array</h1><p>给定长度为 n 的数组 a 和初始数字 x。在一次行动中，可以二选一操作：</p>
+<ol>
+<li>选定从 1 到 n 的 i ，使 $a_i = a_i + x$，然后 x++;</li>
+<li>直接 x++</li>
+</ol>
+<p>对每一个 i，第一个操作最多执行 1 次。</p>
+<p>返回使数组 a 的每个数都被 k 整除所需的最少次数。</p>
+<h2 id="思考-3"><a href="#思考-3" class="headerlink" title="思考"></a>思考</h2><p>使数组 a 的每个数都被 k 整除，就是对每个数加上它对 k 的余数。</p>
+<p>比如 a = [1, 3, 2, 2, 5], k = 3：</p>
+<ul>
+<li>对 1，需要加 2；</li>
+<li>对 3，不用加；</li>
+<li>对第一个 2，需要加 1；</li>
+<li>对第二个 2，此时不能加 1，因为加 1 已经用过了，可以看到 x 在每次操作后都会加 1，所以第二个 2 只能加 4；</li>
+<li>对 5，由于加 1 和加 4 都用过了，所以只能加 7。</li>
+</ul>
+<p>最终 a 变为 [3, 3, 3, 6, 12]，操作次数是 8。</p>
+<p>实现也比较简单，但是要注意不要溢出问题。</p>
+<h2 id="AC-代码-3"><a href="#AC-代码-3" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span> (t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> n = sc.nextInt(), k = sc.nextInt();</span><br><span class="line">            <span class="keyword">int</span>[] a = sc.nextArray(n);</span><br><span class="line">            Map&lt;Integer, Integer&gt; counts = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> num : a) &#123;</span><br><span class="line">                <span class="keyword">int</span> m = num % k;</span><br><span class="line">                <span class="keyword">if</span> (m &gt; <span class="number">0</span>)</span><br><span class="line">                    counts.<span class="built_in">put</span>(m, counts.getOrDefault(m, <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">long</span> res = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(Integer key : counts.keySet()) &#123;</span><br><span class="line">                res = Math.<span class="built_in">max</span>(res, (<span class="keyword">long</span>) counts.<span class="built_in">get</span>(key) * (<span class="keyword">long</span>)k - key);</span><br><span class="line">            &#125;</span><br><span class="line">            pw.<span class="built_in">println</span>(res == <span class="number">0</span> ? <span class="number">0</span> : res + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="E1-Reading-Books-easy-version"><a href="#E1-Reading-Books-easy-version" class="headerlink" title="E1. Reading Books (easy version)"></a>E1. Reading Books (easy version)</h1><p>Alice 和 Bod 一起阅读。</p>
+<p>给定 n 本书，对于每本书，$t_i$ 表示阅读需要的时间，$a_i$ 表示 Alice 是否喜欢，$b_i$ 表示 Bob 是否喜欢。</p>
+<p>从 n 本书中选若干本组成阅读书目，该书目需要满足：</p>
+<ol>
+<li>Alice 和 Bob 都至少喜欢 k 本书</li>
+<li>总阅读时间最短</li>
+</ol>
+<p>返回最少阅读时间，不存在则返回 -1。</p>
+<h2 id="思考-4"><a href="#思考-4" class="headerlink" title="思考"></a>思考</h2><p>首先对书进行分类，分为 a 喜欢的，b 喜欢的，ab 都喜欢的以及 ab 都不喜欢的。</p>
+<p>题目的要求是书目至少包含 a 喜欢的 k 本书和 b 喜欢的 k 本书，所以不用关心 ab 都不喜欢的书。</p>
+<p><strong>在选书时，应该如何选呢？</strong></p>
+<p>为了使阅读时间最少，首先将三类书分别按阅读时间排序。在选书时，尝试选择 ab 都喜欢的最短的书，除非 a 喜欢的最短的书加上 b 喜欢的最短的书，两本书加起来的时间还少于 ab 都喜欢的。</p>
+<p>如果不存在 ab 都喜欢的，那么贪心的选 a 和 b 喜欢的最短的书，直到选够 k 本书。</p>
+<h2 id="AC-代码-4"><a href="#AC-代码-4" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = sc.nextInt(), k = sc.nextInt();</span><br><span class="line">        PriorityQueue&lt;Integer&gt; a = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">        PriorityQueue&lt;Integer&gt; b = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">        PriorityQueue&lt;Integer&gt; ab = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> t = sc.nextInt(), ai = sc.nextInt(), bi = sc.nextInt();</span><br><span class="line">            <span class="keyword">if</span> (ai == <span class="number">1</span> &amp;&amp; bi == <span class="number">1</span>) &#123;</span><br><span class="line">                ab.add(t);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ai == <span class="number">1</span>) &#123;</span><br><span class="line">                a.add(t);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (bi == <span class="number">1</span>) &#123;</span><br><span class="line">                b.add(t);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> countA = <span class="number">0</span>, countB = <span class="number">0</span>, res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(countA &lt; k || countB &lt; k) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!ab.isEmpty() &amp;&amp; !a.isEmpty() &amp;&amp; !b.isEmpty()) &#123;</span><br><span class="line">                <span class="keyword">if</span> (ab.<span class="built_in">peek</span>() &lt;= a.<span class="built_in">peek</span>() + b.<span class="built_in">peek</span>()) &#123;</span><br><span class="line">                    res += ab.poll();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    res += a.poll() + b.poll();</span><br><span class="line">                &#125;</span><br><span class="line">                countA++;</span><br><span class="line">                countB++;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!ab.isEmpty()) &#123;</span><br><span class="line">                res += ab.poll();</span><br><span class="line">                countA++;</span><br><span class="line">                countB++;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!a.isEmpty() &amp;&amp; countA &lt; k) &#123;</span><br><span class="line">                res += a.poll();</span><br><span class="line">                countA++;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!b.isEmpty() &amp;&amp; countB &lt; k) &#123;</span><br><span class="line">                res += b.poll();</span><br><span class="line">                countB++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (countA &lt; k || countB &lt; k) &#123;</span><br><span class="line">            pw.<span class="built_in">println</span>(<span class="number">-1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            pw.<span class="built_in">println</span>(res);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="E2-Reading-Books-hard-version"><a href="#E2-Reading-Books-hard-version" class="headerlink" title="E2. Reading Books (hard version)"></a>E2. Reading Books (hard version)</h1><p>Alice 和 Bod 再次一起阅读 n 本书，分配规则同 E1。</p>
+<p>不同的是，需要从 n 本书中选 m 本书。</p>
+<p>同样返回最少阅读时间，不存在则返回 -1。</p>
+<h2 id="思考-5"><a href="#思考-5" class="headerlink" title="思考"></a>思考</h2><p>E2 比 E1 多了一个硬性要求，必须选中 m 本书。</p>
+<p>首先，我么可以先按照 E1 的思路，选中任意本书满足至少包含 a 喜欢的 k 本书和 b 喜欢的 k 本书。</p>
+<p>然后，在这个基础上，对选中的集合进行删减。</p>
+<p>如果选中的书大于 m，那么需要做减法。因为在做减法时，仍需要满足  k 本书的条件，所以唯一的减法是去除 a 喜欢的和 b 喜欢的各一本，选择 ab 都喜欢的代替。如果不存在，则返回 -1.</p>
+<p>如果选中的书小于 m，那么需要做加法。首先从未选中的书里选一本最短的书，如果不存在，则返回 -1，替换的方案有几种</p>
+<ul>
+<li>存在 ab 都喜欢的，且 a 喜欢的和 b 喜欢的都还有未使用的<ul>
+<li>方案一：剔除 ab 都喜欢的，替换成 a 喜欢的 + b 喜欢的</li>
+<li>方案二：直接加入新书</li>
+<li>比较方案一和方案二，选择阅读时间最短的</li>
+</ul>
+</li>
+<li>否则直接加入新书</li>
+</ul>
+<h1 id="F-Cyclic-Shifts-Sorting"><a href="#F-Cyclic-Shifts-Sorting" class="headerlink" title="F. Cyclic Shifts Sorting"></a>F. Cyclic Shifts Sorting</h1><p>给定长度为 n 的数组 a，使用下列操作进行排序：</p>
+<ul>
+<li>选中 i，用 $[a_{i+2}, a_{i}, a_{i+1}]$ 代替 $[a_{i}, a_{i + 1}, a_{i + 2}]$</li>
+</ul>
+<p>即向右旋转一位，最多操作 $n^2$ 次。</p>
+<p>返回操作次数以及每次操作选择的下标</p>
+<h2 id="思考-6"><a href="#思考-6" class="headerlink" title="思考"></a>思考</h2><p><span class="exturl" data-url="aHR0cHM6Ly9jb2RlZm9yY2VzLmNvbS9ibG9nL2VudHJ5Lzc5NTE3">官方题解<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+      
+
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1076,7 +1251,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1129,13 +1304,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">40k</span>
+    <span title="站点总字数">46k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:41</span>
+    <span title="站点阅读时长">1:54</span>
 </div>
   <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
   </div>
