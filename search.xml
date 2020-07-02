@@ -267,6 +267,7 @@
         <tag>Codeforces</tag>
         <tag>Algorithm</tag>
         <tag>Competive Programming</tag>
+        <tag>Div2</tag>
       </tags>
   </entry>
   <entry>
@@ -472,6 +473,7 @@
         <tag>Codeforces</tag>
         <tag>Algorithm</tag>
         <tag>Competive Programming</tag>
+        <tag>Div2</tag>
       </tags>
   </entry>
   <entry>
@@ -570,6 +572,80 @@
         <tag>Codeforces</tag>
         <tag>Algorithm</tag>
         <tag>Competive Programming</tag>
+        <tag>Div3</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Codeforces Round 654 题解</title>
+    <url>/posts/codeforces-round-654-solutions.html</url>
+    <content><![CDATA[<h1 id="A-Magical-Sticks"><a href="#A-Magical-Sticks" class="headerlink" title="A. Magical Sticks"></a>A. Magical Sticks</h1><p>给定长度为 1 - n 的木棍，Rocher 可以将长度为 a 和长度为 b 的木棍接起来，形成长度为 a + b 的木棍。<br>返回 Rocher 能得到相同长度木棍的最大数量。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>当 n 为偶数时，最多可形成 $1 + n = 2 + (n - 1) = … = \frac{n}{2} + (\frac{n}{2} + 1)$ 共 $\frac{n}{2}$ 个。</p>
+<p>当 n 为奇数时，目标长度为 n，$n = 1 + (n - 1) = … = \frac{n-1}{2} + (\frac{n-1}{2} + 1) 共 $\frac{n - 1}{2} + 1 = \frac{n + 1}{2}$</p>
+<p>综上，答案为 $\frac{n + 1}{2}$。（n 为偶数是，n + 1 不会影响）<br>时间复杂度为 O(1)。</p>
+<h1 id="B-Magical-Calendar"><a href="#B-Magical-Calendar" class="headerlink" title="B. Magical Calendar"></a>B. Magical Calendar</h1><p>（题意都难读懂的题）<br>有这样一个神奇的日历，它一周的长度 k （1&lt;=k&lt;=r）可以任意指定。<br>给定一定天数 n，你要在日历上连续安排 n 天。安排的形状有两点限制：</p>
+<ul>
+<li>任意两天都是相连的，即不能在日历上中断</li>
+<li>形状相同的视为一种安排</li>
+</ul>
+<p>给定 n 和 r，返回不同安排的数量。</p>
+<h2 id="思考-1"><a href="#思考-1" class="headerlink" title="思考"></a>思考</h2><p>试着画出几个例子后可以发现，当 n &lt; k 时，每一个 k 对应的种类都是 k 种。<br>比如，k = 3，n = 4，在图上可以有 3 中不同的安排。</p>
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/654b.png">
+
+<p>当 n &gt;= k 时，由于安排在日历上必须是相连的，所以 n 天必须排在一周内，不能跨周，这样就只有一种安排。</p>
+<p>所以当 n &gt; r 时，答案是$1 + 2 + … + r = \frac{(r + 1) * r}{2}$；当 n &lt;= r 时，答案是$1 + 2 + … + (n - 1) + 1 = \frac{(n - 1) * n}{2} + 1$。</p>
+<h2 id="AC-代码"><a href="#AC-代码" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span>(t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">long</span> n = sc.nextLong(), r = sc.nextLong();</span><br><span class="line">            <span class="keyword">if</span> (n &lt;= r) &#123;</span><br><span class="line">                pw.<span class="built_in">println</span>((n - <span class="number">1</span>) * n / <span class="number">2</span> + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                pw.<span class="built_in">println</span>((r + <span class="number">1</span>) * r / <span class="number">2</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="C-A-Cookie-for-You"><a href="#C-A-Cookie-for-You" class="headerlink" title="C. A Cookie for You"></a>C. A Cookie for You</h1><p>有 A、B 两种饼干各 a、b 个。有两种客户，人数分别是 n 和 m，他们选择饼干的规则为：</p>
+<ul>
+<li>第一种类型：当 a &gt; b 时，选择 A，否则选 B</li>
+<li>第二种类型: 当 a &gt; b 时，选择 B，否则选 A</li>
+</ul>
+<p>每个人按顺序选择，问是否有一种顺序可以满足所有人的选择。</p>
+<h2 id="思考-2"><a href="#思考-2" class="headerlink" title="思考"></a>思考</h2><p>刚开始看题一脸懵，到底该先选 A 还是先选 B？</p>
+<p>明显的一点是，当饼干的数量小于总人数时，肯定是无法满足的。</p>
+<p>再分析两种类型的人的特点，第一类人只吃多的，而第二类人只吃少的。所以，如果满足上述条件的话，第一类人总能吃到他想选的。而第二类人有可能吃不到。</p>
+<p>所以，其实最佳方案就是，先安排第二类人，再安排第一类人。如果两种饼干较少的一堆可以满足第二类人，则返回 “Yes”。</p>
+<h1 id="D-Grid-00100"><a href="#D-Grid-00100" class="headerlink" title="D. Grid-00100"></a>D. Grid-00100</h1><p>给定整数 n 和 k，构造 n x n 的数组 A，A 只包含 0 和 1，且只能包含 k 个 1。<br>定义 $R_i$ 为第 i 行的和，$C_j$ 为第 j 列的和，定义f(A)<br>$$f(A) = (max(R) - min(R))^2 + (max(C) - min(C))^2 $$</p>
+<p>问 f(A) 的最小值，以及 1 在 A 如何分布？</p>
+<h2 id="思考-3"><a href="#思考-3" class="headerlink" title="思考"></a>思考</h2><p>f(A) 的取值与每行和每列的最大值和最小值有关，如何能尽量让差值变小呢？</p>
+<p>假设 k &lt; n，应该怎么分配？按对角线分配！<br>假设 n = 3，k 的分布如下：</p>
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/654d-1.png">
+
+<p>当 k % n == 0 时，f(A) = 0，否则 f(A) = 2，分配方案是按对角线逐步分配，以 n = 4 为例，数字表示填充 1 的顺序。</p>
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/654d-2.png">
+<h2 id="AC-代码-1"><a href="#AC-代码-1" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    static <span class="keyword">final</span> FS sc = new FS();</span><br><span class="line">    static <span class="keyword">final</span> PrintWriter pw = new PrintWriter(System.<span class="keyword">out</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> static <span class="built_in">void</span> main(String[] args) &#123;</span><br><span class="line">        <span class="built_in">int</span> t = sc.nextInt();</span><br><span class="line">        <span class="keyword">while</span>(t-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">int</span> n = sc.nextInt(), k = sc.nextInt();</span><br><span class="line">            <span class="keyword">if</span> (k % n == <span class="number">0</span>) &#123;</span><br><span class="line">                pw.println(<span class="number">0</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                pw.println(<span class="number">2</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">int</span>[][] res = new <span class="built_in">int</span>[n][n];</span><br><span class="line">            <span class="built_in">int</span> p = <span class="number">0</span>, q = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span>(k &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                k--;</span><br><span class="line">                res[p][q] = <span class="number">1</span>;</span><br><span class="line">                p++;</span><br><span class="line">                q = (q + <span class="number">1</span>) % n;</span><br><span class="line">                <span class="keyword">if</span> (p == n) &#123;</span><br><span class="line">                    p = <span class="number">0</span>;</span><br><span class="line">                    q = (q + <span class="number">1</span>) % n;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i &lt; n;i++) &#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">0</span>;j &lt; n;j++) &#123;</span><br><span class="line">                    pw.print(res[i][j]);</span><br><span class="line">                &#125;</span><br><span class="line">                pw.println();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="E-Asterism"><a href="#E-Asterism" class="headerlink" title="E. Asterism"></a>E. Asterism</h1><p>Yuzu 在玩一个游戏，初始时有 x 个糖果。有 n 个敌人站在她面前，每个敌人手里有 $a_i$ 块糖果。<br>Yuzu 可以决定他们的顺序（任意选一个排列），跟每个敌人比较：</p>
+<ul>
+<li>如果 Yuzu 的糖果数大于等于敌人，Yuzu 赢且多一块糖果，否则 Yuzu 就输了</li>
+<li>得到的一块糖果可以继续用</li>
+</ul>
+<p>Yuzu 希望全赢，共有多少种排列满足条件？定义 f(x) 为有效的排列数。如果 f(x) 不能被质数 p 整除，则称 x 是好的数。找到所有的 x。</p>
+<h2 id="思考-4"><a href="#思考-4" class="headerlink" title="思考"></a>思考</h2><p>令 $m = max(a_1, a_2, …, a_n)$。<br>当 x &lt; m - n + 1 时，没有一种排列满足条件，此时 f(x) = 0。<br>当 x &gt;= m 时，任何一种排列都可以满足条件，此时 f(x) = n!。</p>
+<p>由于 f(x) 是单调递增的，所以可以用二分查找法，找出左右边界。</p>
+<h2 id="AC-代码-2"><a href="#AC-代码-2" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    static <span class="keyword">final</span> FS sc = new FS();</span><br><span class="line">    static <span class="keyword">final</span> PrintWriter pw = new PrintWriter(System.<span class="keyword">out</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> static <span class="built_in">void</span> main(String[] args) &#123;</span><br><span class="line">        <span class="built_in">int</span> n = sc.nextInt(), p = sc.nextInt();</span><br><span class="line">        <span class="built_in">int</span>[] a = sc.nextArray(n);</span><br><span class="line">        Arrays.sort(a);</span><br><span class="line">        <span class="built_in">int</span> left = <span class="number">1</span>, right = (<span class="built_in">int</span>) <span class="number">1e9</span>;</span><br><span class="line">        <span class="built_in">int</span> first = (<span class="built_in">int</span>) <span class="number">1e9</span> + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">            <span class="built_in">int</span> x = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="built_in">bool</span>ean valid = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (a[i] &gt; x + i) &#123;</span><br><span class="line">                    valid = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (valid) &#123;</span><br><span class="line">                right = x - <span class="number">1</span>;</span><br><span class="line">                first = x;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                left = x + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> last = first - <span class="number">1</span>;</span><br><span class="line">        left = first;</span><br><span class="line">        right = (<span class="built_in">int</span>) <span class="number">1e9</span>;</span><br><span class="line">        <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">            <span class="built_in">int</span> x = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="built_in">bool</span>ean valid = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="built_in">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                <span class="built_in">int</span> c = Math.max(<span class="number">0</span>, a[i] - x);</span><br><span class="line">                <span class="built_in">int</span> options = i + <span class="number">1</span> - c;</span><br><span class="line">                <span class="keyword">if</span> (options % p == <span class="number">0</span>) &#123;</span><br><span class="line">                    valid = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (valid) &#123;</span><br><span class="line">                left = x + <span class="number">1</span>;</span><br><span class="line">                last = x;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                right = x - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.println(last - first + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = first; i &lt;= last; i++) &#123;</span><br><span class="line">            pw.print(i + <span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.println();</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="F-Raging-Thunder"><a href="#F-Raging-Thunder" class="headerlink" title="F. Raging Thunder"></a>F. Raging Thunder</h1><p>给定长度为 n 的字符串，字符串内只包含 “&lt;”” 和 “&gt;”。假设在每个字符间都有一个洞，包括两端，那么就有 n + 1 个洞，编号从 0 到 n，编号为 0 的洞在最左侧。</p>
+<p>当一个球落在第 i （i&gt;=1）位时，球的移动规则：<br>如果第 i 位为 “&lt;”，那么</p>
+<ul>
+<li>如果 i = 1，球落在 0 号洞</li>
+<li>如果 i - 1 的符号为 &lt;，球移动到 i - 1 位</li>
+<li>如果 i - 1 的符号为 &gt;，球落在 i - 1 号洞口</li>
+</ul>
+<p>相反的，如果第 i 位为 “&gt;”，那么</p>
+<ul>
+<li>如果 i = n，球落在 n 号洞</li>
+<li>如果 i + 1 的符号为 &gt;，球移动到 i + 1 位</li>
+<li>如果 i + 1 的符号为 &lt;，球落在 i 号洞口</li>
+</ul>
+<p>给定一条查询 l, r (1&lt;=l&lt;=r&lt;=n)，首先将 [l,r] 位的符号取反（改动保持到下一次查询），然后在 [l, r] 各放一个球，找出掉落球最多的洞口（球不计入下一次查询）。</p>
+<h2 id="思考-5"><a href="#思考-5" class="headerlink" title="思考"></a>思考</h2><p>一个球会落在形如 “&gt;&gt;&gt;…&gt;&gt;&lt;&lt;…&lt;&lt;&lt;” 的结构中，可以使用<span class="exturl" data-url="aHR0cHM6Ly9jb2RlZm9yY2VzLmNvbS9ibG9nL2VudHJ5Lzc5NjI0">线段树<i class="fa fa-external-link-alt"></i></span>来解。</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>Codeforces</tag>
+        <tag>Algorithm</tag>
+        <tag>Competive Programming</tag>
+        <tag>Div2</tag>
       </tags>
   </entry>
 </search>
