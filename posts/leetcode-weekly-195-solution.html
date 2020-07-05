@@ -13,7 +13,6 @@
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
   <meta http-equiv="Cache-Control" content="no-transform">
   <meta http-equiv="Cache-Control" content="no-siteapp">
-  <meta name="google-site-verification" content="z4dtBuOaMDpmXVa3jxOuXTFFJE_TTb98hK4GMQDb2kE">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -35,11 +34,11 @@
 <meta property="og:description" content="1. 数组异或操作给定两个整数，n 和 start 。 数组 nums 定义为：nums[i] &#x3D; start + 2 * i（下标从 0 开始）且 n &#x3D;&#x3D; nums.length 。 返回 nums 中所有元素按位异或（XOR）后得到的结果。 思考一眼看过去是送分题，其实真是送分题，O(n) 的解法居然也过了，因为数据集 n &lt;&#x3D; 1000。 仔细想想，可以利用异或的性质 $$2x \o">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-06-22T14:35:45.000Z">
-<meta property="article:modified_time" content="2020-06-22T14:39:24.975Z">
+<meta property="article:modified_time" content="2020-07-05T11:59:29.047Z">
 <meta property="article:author" content="sq-zhang">
-<meta property="article:tag" content="Codeforces">
 <meta property="article:tag" content="Algorithm">
 <meta property="article:tag" content="Competive Programming">
+<meta property="article:tag" content="Leetcode">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://sq-zhang.github.io/posts/leetcode-weekly-195-solution.html">
@@ -156,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">6</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">7</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -166,7 +165,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">7</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">8</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -249,10 +248,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-06-22 22:35:45 / 修改时间：22:39:24" itemprop="dateCreated datePublished" datetime="2020-06-22T22:35:45+08:00">2020-06-22</time>
+              <time title="创建时间：2020-06-22 22:35:45" itemprop="dateCreated datePublished" datetime="2020-06-22T22:35:45+08:00">2020-06-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-05 19:59:29" itemprop="dateModified" datetime="2020-07-05T19:59:29+08:00">2020-07-05</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -394,6 +399,9 @@
   <div class="popular-posts-header">相关文章推荐</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/posts/leetcode-weekly-196-solutions.html" rel="bookmark">Leetcode Weekly 196 题解</a></div>
+    </li>
+    <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="/posts/codeforces-round-651-solution.html" rel="bookmark">Codeforces Round 651 题解</a></div>
     </li>
     <li class="popular-posts-item">
@@ -443,9 +451,9 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Codeforces/" rel="tag"><i class="fa fa-tag"></i> Codeforces</a>
               <a href="/tags/Algorithm/" rel="tag"><i class="fa fa-tag"></i> Algorithm</a>
               <a href="/tags/Competive-Programming/" rel="tag"><i class="fa fa-tag"></i> Competive Programming</a>
+              <a href="/tags/Leetcode/" rel="tag"><i class="fa fa-tag"></i> Leetcode</a>
           </div>
 
         
@@ -542,7 +550,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -555,7 +563,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -595,13 +603,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">49k</span>
+    <span title="站点总字数">52k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">2:04</span>
+    <span title="站点阅读时长">2:09</span>
 </div>
   <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
   </div>
