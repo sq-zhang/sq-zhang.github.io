@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+<meta name="google-site-verification" content="czg1YrWlneWoQ8iv8DKMIXT9caP52xXoC0QMKP90zBo" />
+<meta name="baidu-site-verification" content="86fFCLCrNt" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"sq-zhang.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Atcode Beginer Contest 173 题解，共 6 题，A-B 是送分题，C 涉及状态的压缩，D 是 K 数相乘，F 涉及图论连通分量的计算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Atcode Beginer Contest 173 题解">
+<meta property="og:url" content="https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html">
+<meta property="og:site_name" content="浅前的博客">
+<meta property="og:description" content="Atcode Beginer Contest 173 题解，共 6 题，A-B 是送分题，C 涉及状态的压缩，D 是 K 数相乘，F 涉及图论连通分量的计算">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://qcn3yr1zw.bkt.clouddn.com/static/images/abc173d.png">
+<meta property="og:image" content="http://qcn3yr1zw.bkt.clouddn.com/static/images/abc173f-1.png">
+<meta property="article:published_time" content="2020-07-06T13:01:37.000Z">
+<meta property="article:modified_time" content="2020-07-06T13:18:47.535Z">
+<meta property="article:author" content="sq-zhang">
+<meta property="article:tag" content="Atcode">
+<meta property="article:tag" content=" Atcode Beginer Contest 173">
+<meta property="article:tag" content=" Payment">
+<meta property="article:tag" content=" Judge Status Summary">
+<meta property="article:tag" content=" Chat in a Circle">
+<meta property="article:tag" content=" Multiplication">
+<meta property="article:tag" content=" Intervals on Tree">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qcn3yr1zw.bkt.clouddn.com/static/images/abc173d.png">
+
+<link rel="canonical" href="https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Atcode Beginer Contest 173 题解 | 浅前的博客</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-170167173-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a615cbf4cd9d874e95fd0cb47ab3841a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">浅前的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">If you can’t explain it simply, you don’t understand it well enough.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">9</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3NxLXpoYW5n" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="sq-zhang">
+      <meta itemprop="description" content="If you can’t explain it simply, you don’t understand it well enough.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="浅前的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Atcode Beginer Contest 173 题解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-07-06 21:01:37 / 修改时间：21:18:47" itemprop="dateCreated datePublished" datetime="2020-07-06T21:01:37+08:00">2020-07-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/atcoder-beginner-contest-173-solutions.html" class="post-meta-item leancloud_visitors" data-flag-title="Atcode Beginer Contest 173 题解" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+            <div class="post-description">Atcode Beginer Contest 173 题解，共 6 题，A-B 是送分题，C 涉及状态的压缩，D 是 K 数相乘，F 涉及图论连通分量的计算</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="A-Payment"><a href="#A-Payment" class="headerlink" title="A - Payment"></a>A - Payment</h1><p>我们要买价值 n 元的产品，如果我们只用 1000 面值的纸币。<br>输出得到的找零。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>为初次参赛准备的入门题。<br>明显答案为 1000 - n % 1000。当 n 为 1000 的整数倍时，输出 0。</p>
+<h2 id="AC-代码"><a href="#AC-代码" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = sc.nextInt();</span><br><span class="line">        <span class="keyword">int</span> res = n % <span class="number">1000</span>;</span><br><span class="line">        pw.<span class="built_in">println</span>(res == <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1000</span> - res);</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="B-Judge-Status-Summary"><a href="#B-Judge-Status-Summary" class="headerlink" title="B - Judge Status Summary"></a>B - Judge Status Summary</h1><p>给定整数 n，以及 n 个评分状态。统计评分状态中 AC、WA、TLE 和 RE 出现的次数。</p>
+<h2 id="思考-1"><a href="#思考-1" class="headerlink" title="思考"></a>思考</h2><p>另一道为初次参赛准备的入门题。<br>可以使用哈希表统计出现字符串的次数，或者直接只统计这 4 个状态。</p>
+<h2 id="AC-代码-1"><a href="#AC-代码-1" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = sc.nextInt();</span><br><span class="line">        Map&lt;<span class="keyword">String</span>, Integer&gt; maps = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span> (n-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">String</span> s = sc.next();</span><br><span class="line">            maps.<span class="built_in">put</span>(s, maps.getOrDefault(s, <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">println</span>(<span class="string">"AC x "</span> + maps.getOrDefault(<span class="string">"AC"</span>, <span class="number">0</span>));</span><br><span class="line">        pw.<span class="built_in">println</span>(<span class="string">"WA x "</span> + maps.getOrDefault(<span class="string">"WA"</span>, <span class="number">0</span>));</span><br><span class="line">        pw.<span class="built_in">println</span>(<span class="string">"TLE x "</span> + maps.getOrDefault(<span class="string">"TLE"</span>, <span class="number">0</span>));</span><br><span class="line">        pw.<span class="built_in">println</span>(<span class="string">"RE x "</span> + maps.getOrDefault(<span class="string">"RE"</span>, <span class="number">0</span>));</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="C-H-and-V"><a href="#C-H-and-V" class="headerlink" title="C - H and V"></a>C - H and V</h1><p>给定 H x W 的单元格矩阵 c，矩阵的元素 $c_{i,j}$ 有两种取值：’.’ 或 ‘#’，其中 ‘.’ 表示单元格为白色，’#’ 表示单元格为黑色。<br>你可以选择任意行或任意列，使得整行或整列变为红色。<br>给定一个整数 K，问有多少种涂色方案使得矩阵中正好剩下 k 个黑色单元格。</p>
+<p><strong>数据要求</strong></p>
+<ul>
+<li>$1 \le H,W \le 6$</li>
+<li>$1 \le K \le H*W$</li>
+<li>$c_{i,j}$ 为 ‘.’ 或 ‘#’</li>
+</ul>
+<h2 id="思考-2"><a href="#思考-2" class="headerlink" title="思考"></a>思考</h2><p>首先要充分理解题意，行和列的个数是任选的，也可以是 0。</p>
+<p>一种想法是，统计每行每列黑色的个数，然后任意组合得到被覆盖的黑色的个数。当 $c_{i,j}$ = ‘#’ 时，同时选中第 i 行和第 j 列要避免重复计算的问题。</p>
+<p>另一种想法是，遍历状态，每行和每列都有选中和不选中两种状态，状态总数为 $2^{H+W}$。因为 $1 \le H,W \le 6$，所以不必担心会超时。而且可以用比特位表示状态，比如 6 = 0110，表示选中第 2 行和第 3 行。在每种状态下统计 ‘#’ 的个数，恰好等于 k 则找到一种可行解。 </p>
+<h2 id="AC-代码-2"><a href="#AC-代码-2" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Main</span> &#123;</span><br><span class="line">    static <span class="keyword">final</span> FS sc = new FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    static <span class="keyword">final</span> PrintWriter pw = new PrintWriter(System.<span class="keyword">out</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> static <span class="built_in">void</span> main(String[] args) &#123;</span><br><span class="line">        <span class="built_in">int</span> n = sc.nextInt(), m = sc.nextInt(), k = sc.nextInt();</span><br><span class="line">        char[][] s = new char[n][m];</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; s.length; i++)&#123;</span><br><span class="line">            String t = sc.next();</span><br><span class="line">            s[i] = t.toCharArray();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1</span> &lt;&lt; n; i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">0</span>; j &lt; <span class="number">1</span> &lt;&lt; m; j++)&#123;</span><br><span class="line">                <span class="built_in">int</span> count = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">for</span>(<span class="built_in">int</span> c = <span class="number">0</span>; c &lt; n; c++)&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="built_in">int</span> d = <span class="number">0</span>; d &lt; m; d++)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(((i &gt;&gt; c &amp; <span class="number">1</span>) == <span class="number">1</span>) &amp;&amp; ((j &gt;&gt; d &amp; <span class="number">1</span>) == <span class="number">1</span>))&#123;</span><br><span class="line">                            <span class="keyword">if</span>(s[c][d] == <span class="string">'#'</span>)&#123;</span><br><span class="line">                                count++;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(count == k)&#123;</span><br><span class="line">                    res++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.println(res);</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="D-Chat-in-a-Circle"><a href="#D-Chat-in-a-Circle" class="headerlink" title="D - Chat in a Circle"></a>D - Chat in a Circle</h1><p>给定 n 位选手，编号从 1 到 n。给定一个数据 A，其中 $A_i$ 表示 i 号选手的友好度。<br>选手们依次到场，而且围成一个圈。当一名选手加入圈内，它会获得左右两边选手中友好度较小的一个。第一名选手得到 0。<br>输出 n 名选手总共能得到的最大友好度。<br><strong>数据要求</strong></p>
+<ul>
+<li>$2 \le n \le 2 x 10^5$</li>
+<li>$1 \le A_i \le 10^9$</li>
+</ul>
+<h2 id="思考-3"><a href="#思考-3" class="headerlink" title="思考"></a>思考</h2><p>贪心算法：欲使得到的友好度最大，必须按友好度降序的顺序安排选手。由于选手围成一个圈，所以每次能得到圈中最大友好度最多 2 次，最大值只能获得 1 次。</p>
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/abc173d.png">
+
+<p>以 9，8，7，6，5 为例，先往圈中放入 9。之后放入 8，友好度增加 9；放入 7 时，有两个位置可选，都只能友好度加 8；放入 6 时，放在 8、9 中间，友好度加 8；同理，5 为了避免在 6 身边，最多只能得到 7，以此类推。</p>
+<p>所以答案为 $\sum_{k=1}^{n - 1} A_{n - k / 2}$。<br>算法时间复杂度为 $O(n\log{n})$，瓶颈在排序上。也可以通过将排序降为 O(n)，得到 O(n) 的解法。</p>
+<h2 id="AC-代码-3"><a href="#AC-代码-3" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> Main &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) &#123;</span><br><span class="line">        <span class="keyword">int</span> n = sc.nextInt();</span><br><span class="line">        <span class="keyword">int</span>[] a = sc.nextArray(n);</span><br><span class="line">        Arrays.<span class="keyword">sort</span>(a);</span><br><span class="line">        <span class="keyword">long</span> res = a[n - <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> <span class="keyword">count</span> = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = n - <span class="number">2</span>;i &gt;= <span class="number">0</span>;i--) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">count</span> == n - <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">count</span> == n - <span class="number">2</span>) &#123;</span><br><span class="line">                res += a[i];</span><br><span class="line">                <span class="keyword">count</span> += <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                res += (<span class="keyword">long</span>) a[i] * <span class="number">2</span>;</span><br><span class="line">                <span class="keyword">count</span> += <span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="keyword">println</span>(res);</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="E-Multiplication-4"><a href="#E-Multiplication-4" class="headerlink" title="E - Multiplication 4"></a>E - Multiplication 4</h1><p>给定 n 个整数，从中选择 k 个数相乘。<br>输出最大乘积，结果取模 1e9 + 7。<br><strong>数据要求</strong></p>
+<ul>
+<li>$1 \le k \le n \le 2 x 10^5$</li>
+<li>$|A_i| \le 10^9$</li>
+</ul>
+<h2 id="思考-4"><a href="#思考-4" class="headerlink" title="思考"></a>思考</h2><p>显然，当 n = k 时，或所有数都是负数，且 k 是奇数时，最佳选择是选 k 个绝对值最小的数相乘。<br>其他情况，答案都是非负数，因此只需尽量将绝对值最大化。</p>
+<p>绝对值最大化的一种方案是将 A 按绝对值降序排序，取前 k 个数相乘，如果得到非负数，那么它就是答案。否则需要将它变为非负数，这时有两个选项：</p>
+<ol>
+<li>移除绝对值最小的负数，加入决定值最大的非负数</li>
+<li>移除绝对值最小的正数，加入绝对值最大的负数</li>
+</ol>
+<p>另一种方案是将正负分开，分别按顺序两两配对，贪心的从中选取乘积大的加入。</p>
+<p>（如果 0 的数量过多，可提前判断，优化速度）</p>
+<h2 id="AC-代码-4"><a href="#AC-代码-4" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Main</span> &#123;</span><br><span class="line">    static <span class="keyword">final</span> FS sc = new FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    static <span class="keyword">final</span> PrintWriter pw = new PrintWriter(System.<span class="keyword">out</span>);</span><br><span class="line">    static <span class="keyword">final</span> <span class="built_in">int</span> e97 = (<span class="built_in">int</span>)<span class="number">1e9</span> + <span class="number">7</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> static <span class="built_in">void</span> main(String[] args) &#123;</span><br><span class="line">        <span class="built_in">int</span> n = sc.nextInt(), k = sc.nextInt();</span><br><span class="line">        long[] a = new long[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>;i &lt; n;i++) &#123;</span><br><span class="line">            a[i] = sc.nextLong();</span><br><span class="line">        &#125;</span><br><span class="line">        Arrays.sort(a);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(n == k)&#123;</span><br><span class="line">            long ans =<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">for</span>(long e: a)&#123;</span><br><span class="line">                ans = (e * ans) % e97;</span><br><span class="line">            &#125;</span><br><span class="line">            ans += e97;</span><br><span class="line">            ans %= e97;</span><br><span class="line">            System.<span class="keyword">out</span>.println(ans);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> negCount = <span class="number">0</span>, zeroCount =<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(a[i]&lt;<span class="number">0</span>) negCount++;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(a[i] == <span class="number">0</span>) zeroCount++;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> posCount = n - negCount - zeroCount;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(zeroCount &gt; (n - k))&#123;</span><br><span class="line">            System.<span class="keyword">out</span>.println(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>((zeroCount == (n - k)) &amp;&amp; (negCount % <span class="number">2</span> == <span class="number">1</span>))&#123;</span><br><span class="line">            System.<span class="keyword">out</span>.println(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>((posCount == <span class="number">0</span>) &amp;&amp; (k % <span class="number">2</span> == <span class="number">1</span>))&#123;</span><br><span class="line">            <span class="keyword">if</span>(zeroCount &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                System.<span class="keyword">out</span>.println(<span class="number">0</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                long ans =<span class="number">1</span>;</span><br><span class="line">                <span class="keyword">for</span>(<span class="built_in">int</span> i = n - <span class="number">1</span>; i &gt;= n - k; i--)&#123;</span><br><span class="line">                    ans = (a[i] * ans) % e97;</span><br><span class="line">                &#125;</span><br><span class="line">                ans += e97;</span><br><span class="line">                ans %= e97;</span><br><span class="line">                System.<span class="keyword">out</span>.println(ans);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        long ans = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        List&lt;Long&gt; multiPair = new ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; negCount; i += <span class="number">2</span>)&#123;</span><br><span class="line">            multiPair.add(a[i - <span class="number">1</span>] * a[i]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> lastPos = n;</span><br><span class="line">        <span class="keyword">if</span>(k % <span class="number">2</span> == <span class="number">0</span>)&#123;</span><br><span class="line">            lastPos -= <span class="number">2</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            ans = a[n<span class="number">-1</span>];</span><br><span class="line">            lastPos -= <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(lastPos &gt;= (zeroCount + negCount))&#123;</span><br><span class="line">            multiPair.add(a[lastPos] * a[lastPos + <span class="number">1</span>]);</span><br><span class="line">            lastPos -= <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        multiPair.sort(Comparator.reverseOrder());</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; k / <span class="number">2</span>; i++)&#123;</span><br><span class="line">            long addi = multiPair.<span class="keyword">get</span>(i) % e97;</span><br><span class="line">            ans *= addi;</span><br><span class="line">            ans %= e97;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(ans &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            ans += e97;</span><br><span class="line">        &#125;</span><br><span class="line">        pw.println(ans);</span><br><span class="line">        pw.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="F-Intervals-on-Tree"><a href="#F-Intervals-on-Tree" class="headerlink" title="F - Intervals on Tree"></a>F - Intervals on Tree</h1><p>给定带 n 个节点和 n - 1 条边的树。令 S 为节点编号从 L 到 R 的节点集合。定义 f(L, R) 等于所有 S 中的节点到 S 中的节点的连接数。</p>
+<p>输出 $\sum_{L=1}^{N} \sum_{R=L}^{N} f(L,R), (1 \le L \le R \le n)$</p>
+<p><strong>数据要求</strong></p>
+<ul>
+<li>$1 \le n \le 2 * 10^5$</li>
+<li>$1 \le u_i,v_i \le n$</li>
+</ul>
+<h2 id="思考-5"><a href="#思考-5" class="headerlink" title="思考"></a>思考</h2><h3 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h3><p>利用并查集计算每个 L,R 对应的连通分量，累加得到答案。<br>时间复杂度是 $O(n^2 \alpha(n))$</p>
+<h3 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h3><p>考虑树的一个性质：节点数 = 边数 + 1。而在 S 内形成的连通分量都是一棵树，所以有连通分量 $m = S_{节点数} - S_{边数}$。</p>
+<p>现在问题转化为在所有的 S 中，包含多少个节点？包含多少条边？它们的差就是答案。</p>
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/abc173f-1.png">
+
+<p>假设 n = 5，对节点 i = 4，什么样的 L，R 能使 S 包含 i = 4？</p>
+<p>显然，L 的取值范围为 [1, 4]，R 的取值范围为 [4, 5]，所以包含 i = 4 的 S 的个数为 4 * 2 = 8，也就是 $i * (n - i + 1)$。</p>
+<p>接着来看边的情况。假设有一条边 e = (4, 2)。S 要包含这边边，必须同时包含节点 2 和 节点 4。那么 L 的取值范围为 [1, 2]，R 的取值范围为 [4, 5]，所以包含 e 的 S 的个数为 2 * 2 = 4，也就是 $min(u_i, v_i) * (n - max(u_i, v_i) + 1)$。</p>
+<p>算法时间复杂度为 O(n)。</p>
+<h2 id="AC-代码-5"><a href="#AC-代码-5" class="headerlink" title="AC 代码"></a>AC 代码</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> &#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> FS sc = <span class="keyword">new</span> FS();  <span class="comment">// 封装输入类</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = sc.nextInt();</span><br><span class="line">        <span class="keyword">long</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">            res += (<span class="keyword">long</span>) i * (n - i + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> a = sc.nextInt() - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">int</span> b = sc.nextInt() - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">int</span> u = Math.<span class="built_in">min</span>(a, b);</span><br><span class="line">            <span class="keyword">int</span> v = Math.<span class="built_in">max</span>(a, b);</span><br><span class="line">            res -= (<span class="keyword">long</span>) (u + <span class="number">1</span>) * (n - v);</span><br><span class="line">        &#125;</span><br><span class="line">        pw.<span class="built_in">println</span>(res);</span><br><span class="line">        pw.<span class="built_in">flush</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/posts/codeforces-round-651-solution.html" rel="bookmark">Codeforces Round 651 题解</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/posts/leetcode-weekly-195-solution.html" rel="bookmark">Leetcode Weekly 195 题解</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/posts/codeforces-round-652-solutions.html" rel="bookmark">Codeforces Round 652 题解</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/posts/codeforces-round-653-solutions.html" rel="bookmark">Codeforces Round 653 题解</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/posts/codeforces-round-654-solutions.html" rel="bookmark">Codeforces Round 654 题解</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>如发现错误或遗漏，请在下方评论或联系我</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="sq-zhang 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>sq-zhang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html" title="Atcode Beginer Contest 173 题解">https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Algorithm/" rel="tag"><i class="fa fa-tag"></i> Algorithm</a>
+              <a href="/tags/Competive-Programming/" rel="tag"><i class="fa fa-tag"></i> Competive Programming</a>
+              <a href="/tags/AtCoder/" rel="tag"><i class="fa fa-tag"></i> AtCoder</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-weekly-196-solutions.html" rel="prev" title="Leetcode Weekly 196 题解">
+      <i class="fa fa-chevron-left"></i> Leetcode Weekly 196 题解
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#A-Payment"><span class="nav-number">1.</span> <span class="nav-text">A - Payment</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">1.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码"><span class="nav-number">1.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B-Judge-Status-Summary"><span class="nav-number">2.</span> <span class="nav-text">B - Judge Status Summary</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-1"><span class="nav-number">2.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-1"><span class="nav-number">2.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-H-and-V"><span class="nav-number">3.</span> <span class="nav-text">C - H and V</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-2"><span class="nav-number">3.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-2"><span class="nav-number">3.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#D-Chat-in-a-Circle"><span class="nav-number">4.</span> <span class="nav-text">D - Chat in a Circle</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-3"><span class="nav-number">4.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-3"><span class="nav-number">4.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#E-Multiplication-4"><span class="nav-number">5.</span> <span class="nav-text">E - Multiplication 4</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-4"><span class="nav-number">5.1.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-4"><span class="nav-number">5.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#F-Intervals-on-Tree"><span class="nav-number">6.</span> <span class="nav-text">F - Intervals on Tree</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考-5"><span class="nav-number">6.1.</span> <span class="nav-text">思考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解法一"><span class="nav-number">6.1.1.</span> <span class="nav-text">解法一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解法二"><span class="nav-number">6.1.2.</span> <span class="nav-text">解法二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AC-代码-5"><span class="nav-number">6.2.</span> <span class="nav-text">AC 代码</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sq-zhang"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">sq-zhang</p>
+  <div class="site-description" itemprop="description">If you can’t explain it simply, you don’t understand it well enough.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sq-zhang</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">58k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:24</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"iFCGO3MEboacRuV5wDmgpaF0-gzGzoHsz","app_key":"672zyRsPmDRQdGx2jwJUaS6V","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html',]
+      });
+      });
+  </script>
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html";
+    this.page.identifier = "posts/atcoder-beginner-contest-173-solutions.html";
+    this.page.title = "Atcode Beginer Contest 173 题解";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://wwwshiqianme.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
