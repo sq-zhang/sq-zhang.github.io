@@ -1,3 +1,9 @@
+https://sq-zhang.github.io/posts/codeforces-global-round-9-solutions.html
 https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html
 https://sq-zhang.github.io/posts/leetcode-weekly-196-solutions.html
 https://sq-zhang.github.io/posts/codeforces-round-654-solutions.html
+https://sq-zhang.github.io/posts/codeforces-round-653-solutions.html
+https://sq-zhang.github.io/posts/codeforces-round-652-solutions.html
+https://sq-zhang.github.io/posts/leetcode-weekly-195-solution.html
+https://sq-zhang.github.io/posts/codeforces-round-651-solution.html
+https://sq-zhang.github.io/posts/java-dynamic-proxy.html
