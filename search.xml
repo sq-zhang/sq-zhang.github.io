@@ -862,4 +862,132 @@
         <tag>Competive Programming</tag>
       </tags>
   </entry>
+  <entry>
+    <title>数据结构之树状数组 Fenwick Tree</title>
+    <url>/posts/fenwick-tree.html</url>
+    <content><![CDATA[<h1 id="A-简介"><a href="#A-简介" class="headerlink" title="A. 简介"></a>A. 简介</h1><p>树状数组 Fenwick Tree，是由 Peter M. Fenwick 在 1994 年发表的论文 《A new data structure for cumulative frequency tables》中提出的一种数据结构。</p>
+<p>它的应用场景是数组，假设长度为 n，它有以下特性：</p>
+<ol>
+<li>O(n) 时间内构造树状数组</li>
+<li>O(log n) 时间内计算 [l, r] 范围内的 f 值（f 是一种函数，比如 sum，max，min 等）</li>
+<li>O(log n) 时间内更新数组的值</li>
+<li>需要 O(N) 存储空间</li>
+<li>实现简单，场景可拓宽到多维数组</li>
+</ol>
+<h1 id="B-原理"><a href="#B-原理" class="headerlink" title="B. 原理"></a>B. 原理</h1><p>树状数组的基本思想是分治，用一个节点表示多个节点的值，那样在查询时只需查询大节点，而不用查询每个节点。</p>
+<!-- ![image](http://note.youdao.com/yws/res/15707/WEBRESOURCEa074c4c7fa45449099de05a540a18f19) -->
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree.png">
+
+<p>比如，在上图中，数组 tree 是一个表示范围和的树状数组。在该数组中：</p>
+<ul>
+<li>tree[8] 代表全部 8 个数</li>
+<li>tree[6] 代表 a[5] 和 a[6]</li>
+<li>tree[4] 代表 a[1]、a[2]、a[3]、a[4]</li>
+<li>tree[2] 代表 a[1]、a[2]</li>
+<li>tree[1]、tree[3]、tree[5]、tree[7] 只代表本身</li>
+</ul>
+<p>细心的你可以发现，对于 i，假设它的二进制表示中最右一个 1 的位置为 p，那么 tree[i] 代表的个数为 $2^p$（所以 tree 的下标是从 1 开始的，因为 0 不存在二进制为 1 的位）。比如</p>
+<ul>
+<li>i = 3(101)，最右一个 1 位于第 0 位，tree[3] 代表一个数，也就是 a[3] 本身。</li>
+<li>i = 4(100)，最右一个 1 位于第 2 位，tree[4] 代表 4 个数，也就是 a[1]、a[2]、a[3]、a[4]。</li>
+</ul>
+<p>i &amp; (-i) = i 代表的个数 $2^p$。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="场景一：单点修改，区间查询"><a href="#场景一：单点修改，区间查询" class="headerlink" title="场景一：单点修改，区间查询"></a>场景一：单点修改，区间查询</h2><blockquote>
+<p>场景：多次修改单点，求范围和</p>
+</blockquote>
+<p><strong>初始化 O(n)</strong></p>
+<p>从树状数组的定义可知，每一个节点与子节点的值直接相关。因此可以从底向上更新父节点的值。i 的父节点为 i + i &amp; (-i)。</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">void init(int[] a) &#123;</span><br><span class="line">    int n = a.<span class="built_in">length</span> + <span class="number">1</span>;</span><br><span class="line">    tree = new int[n];</span><br><span class="line">    <span class="keyword">for</span>(int <span class="built_in">i</span> = <span class="number">1</span>;<span class="built_in">i</span> &lt; n;<span class="built_in">i</span>++) &#123;</span><br><span class="line">        tree[<span class="built_in">i</span>] = a[<span class="built_in">i</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">1</span>; <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) &#123;</span><br><span class="line">        int <span class="built_in">pi</span> = <span class="built_in">i</span> + lowbit(<span class="built_in">i</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">pi</span> &lt; n) &#123;</span><br><span class="line">            tree[<span class="built_in">pi</span>] += tree[<span class="built_in">i</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int lowbit(int <span class="built_in">i</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">i</span> &amp; -<span class="built_in">i</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>范围查询 O(log n)</strong></p>
+<p>范围查询包括前缀和和范围和。范围和可通过前缀和计算得到。</p>
+<p>对于前缀和，根据定义，计算 i 的前缀和的过程也是遍历 i -&gt; 1 的过程，原始的遍历计算是 O(n) 的时间，使用树状数组的遍历时间为 O(log n)。</p>
+<p>以 i = 6 为例，遍历的第一个节点是 tree[6]，它代表 5，6 两个数，因此下一个节点是 tree[4]，它代表 4 个数，到达 tree[0] 结束。因此 i = 6 的前缀和为 tree[6] + tree[4]。</p>
+<figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> prefixSum(<span class="keyword">int</span> i) &#123;</span><br><span class="line">    <span class="keyword">int</span> <span class="keyword">sum</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">sum</span> += tree[i];</span><br><span class="line">        i -= lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">sum</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>假设查询的范围为 [left ,right]，那么 $$sum(left, right) = prefixSum(right) - prefixSum(left - 1)$$</p>
+<figure class="highlight excel"><table><tr><td class="code"><pre><span class="line"><span class="built_in">int</span> <span class="built_in">sum</span>(<span class="built_in">int</span> <span class="built_in">left</span>, <span class="built_in">int</span> <span class="built_in">right</span>) &#123;</span><br><span class="line">    return prefixSum(<span class="built_in">right</span>) - prefixSum(<span class="built_in">left</span> - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>单点修改 O(log n)</strong></p>
+<p>单点修改需要递归地修改它的父节点。</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">void add(int <span class="built_in">i</span>, long v) &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">i</span> &lt; n) &#123;</span><br><span class="line">        tree[<span class="built_in">i</span>] += v;</span><br><span class="line">        <span class="built_in">i</span> += lowbit(<span class="built_in">i</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="场景二：区间修改，单点查询"><a href="#场景二：区间修改，单点查询" class="headerlink" title="场景二：区间修改，单点查询"></a>场景二：区间修改，单点查询</h2><blockquote>
+<p>场景：多次区间修改，求单点值</p>
+</blockquote>
+<p>通过将树状数组定义为每个元素与前一个元素的差，那么它的前缀和和就等于原数组。这样一来，单点查询转变为范围查询，这与场景一相同。区间修改可通过修改树状数组的两个单点实现。所以场景二本质上与场景一相同，只是树状数组定义不同。</p>
+<p><strong>初始化 O(n)</strong></p>
+<p>构建树状数组的过程与场景一相同，初始值改为每个元素与前一个元素的差值。<br>设原数组为 a[i]，那么树状数组 tree[i] = a[i] - a[i - 1](a[0] = 0)。</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">void init() &#123;</span><br><span class="line">    n = a.<span class="built_in">length</span> + <span class="number">1</span>;</span><br><span class="line">    tree = new int[n];</span><br><span class="line">    <span class="keyword">for</span>(int <span class="built_in">i</span> = <span class="number">1</span>;<span class="built_in">i</span> &lt; n;<span class="built_in">i</span>++) &#123;</span><br><span class="line">        tree[<span class="built_in">i</span>] = a[<span class="built_in">i</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">1</span>; <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) &#123;</span><br><span class="line">        int <span class="built_in">pi</span> = <span class="built_in">i</span> + lowbit(<span class="built_in">i</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">pi</span> &lt; n) &#123;</span><br><span class="line">            tree[<span class="built_in">pi</span>] += tree[<span class="built_in">i</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>单点查询 O(log n)</strong></p>
+<p>改变树状数组的定义后，单点查询等同于场景一的范围查询，代码见场景一的 prefixSum 函数。<br>$$a[i] = \sum_{j = 1}^{i} tree[j]$$</p>
+<p><strong>范围修改 O(log n)</strong></p>
+<p>假设要给区间 [l, r] 加上 x，根据树状数组的定义，只需给 tree[l] 加上 x，给 tree[r + 1] 减去 x。因为给 tree[l] 加上 x ，相当于给所有的 a[i] (i &gt;= l) 都加上了 x。再给 tree[r + 1] 减去 x，把对 i &gt; r 的影响消除，从而实现了给区间 [l, r] 加上 x。</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> range<span class="keyword">Add</span>(<span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> x) &#123;</span><br><span class="line">    <span class="keyword">add</span>(l, x);</span><br><span class="line">    <span class="keyword">add</span>(r + <span class="number">1</span>, -x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="keyword">add</span>(<span class="type">int</span> i, <span class="type">int</span> x) &#123;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; n) &#123;</span><br><span class="line">        tree[i] += x;</span><br><span class="line">        i += lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="场景三：区间修改，区间查询"><a href="#场景三：区间修改，区间查询" class="headerlink" title="场景三：区间修改，区间查询"></a>场景三：区间修改，区间查询</h2><blockquote>
+<p>场景：多次区间修改，求范围和</p>
+</blockquote>
+<p>场景三是基于场景二来完成的，同样将树状数组定义为每个元素与前一个元素的差。那么前缀和就可表示为 $$sum(p) = \sum_{i = 1}^{p} \sum_{j = 1}^{i} tree[j]$$</p>
+<p>观察可以发现，tree[j] 被加上的次数等于 p - i + 1。所以前缀和还可以表示为 $$sum(p) = \sum_{i = 1}^{p} tree[i] * (p - i + 1) = (p + 1) * \sum_{i = 1}^{p} tree[i] - \sum_{i = 1}^{p} tree[i] * i$$</p>
+<p>惊喜的看到，前缀和可以由另外两个数组的前缀和表示。<br>所以，可以通过维护 tree[i] 与 tree[i] * i 的树状数组来求范围和。</p>
+<p><strong>初始化 O(n)</strong><br>根据上面的分析，我们要维护 tree[i] 与 tree[i] * i 的树状数组，树状数组的初始化都是一样的, 要注意的是 tree2[i] = tree1[i] * i。</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">void init(int[] a) &#123;</span><br><span class="line">    n = a.<span class="built_in">length</span> + <span class="number">1</span>;</span><br><span class="line">    tree1 = new int[n];</span><br><span class="line">    tree2 = new int[n];</span><br><span class="line">    <span class="keyword">for</span>(int <span class="built_in">i</span> = <span class="number">1</span>;<span class="built_in">i</span> &lt; n;<span class="built_in">i</span>++) &#123;</span><br><span class="line">        tree1[<span class="built_in">i</span>] = <span class="built_in">i</span> == <span class="number">1</span> ? a[<span class="number">0</span>] : a[<span class="built_in">i</span> - <span class="number">1</span>] - a[<span class="built_in">i</span> - <span class="number">2</span>];</span><br><span class="line">        tree2[<span class="built_in">i</span>] = <span class="built_in">i</span> * tree1[<span class="built_in">i</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">1</span>; <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) &#123;</span><br><span class="line">        int <span class="built_in">pi</span> = <span class="built_in">i</span> + lowbit(<span class="built_in">i</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">pi</span> &lt; n) &#123;</span><br><span class="line">            tree1[<span class="built_in">pi</span>] += tree1[<span class="built_in">i</span>];</span><br><span class="line">            tree2[<span class="built_in">pi</span>] += tree2[<span class="built_in">i</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>范围查询 O(log n)</strong><br>位置 p 的前缀和即等于 (p + 1) * tree1 的前缀和 - tree2 的前缀和。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">int</span> prefixSum(<span class="built_in">int</span> p) &#123;</span><br><span class="line">    <span class="built_in">int</span> sum = <span class="number">0</span>, i = p;</span><br><span class="line">    <span class="keyword">while</span> (i != <span class="number">0</span>) &#123;</span><br><span class="line">        sum += tree1[i] * (p + <span class="number">1</span>) - tree2[i];</span><br><span class="line">        i -= lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>范围修改 O(log n)</strong><br>范围修改同场景二，同样基于单点修改。单点修改时要同时修改 tree1 和 tree2。</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="keyword">add</span>(<span class="type">int</span> p, <span class="type">int</span> x) &#123;</span><br><span class="line">    <span class="type">int</span> i = p;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; n) &#123;</span><br><span class="line">        tree1[i] += x;</span><br><span class="line">        tree2[i] += x * p;</span><br><span class="line">        i += lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> range<span class="keyword">Add</span>(<span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> x) &#123;</span><br><span class="line">    <span class="keyword">add</span>(l, x);</span><br><span class="line">    <span class="keyword">add</span>(r + <span class="number">1</span>, -x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="C-推广到二维数组"><a href="#C-推广到二维数组" class="headerlink" title="C. 推广到二维数组"></a>C. 推广到二维数组</h1><p>在一维数组中，tree[i] 表示的是长度为 lowbit(i)，终点为 i 的范围和。那么，在二维数组中，tree[x][y] 表示长为 lowbit(x)，宽为 lowbit(y)，右下角为 (x, y) 的矩阵和。</p>
+<p>相应的二维树状数组的单点修改和区间查询都需要加上一个维度。</p>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">void add(int <span class="symbol">x</span>, int <span class="symbol">y</span>, int v) &#123;</span><br><span class="line">    int y0 = <span class="symbol">y</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="symbol">x</span> &lt; n) &#123;</span><br><span class="line">        <span class="symbol">y</span> = y0;</span><br><span class="line">        <span class="keyword">while</span>(<span class="symbol">y</span> &lt; n) &#123;</span><br><span class="line">            tree[<span class="symbol">x</span>][<span class="symbol">y</span>] += v;</span><br><span class="line">            <span class="symbol">y</span> += lowbit(<span class="symbol">y</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="symbol">x</span> += lowbit(<span class="symbol">x</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int prefixSum(int <span class="symbol">x</span>, int <span class="symbol">y</span>) &#123;</span><br><span class="line">    int sum = <span class="number">0</span>, y0 = <span class="symbol">y</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="symbol">x</span> != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="symbol">y</span> = y0;</span><br><span class="line">        <span class="keyword">while</span> (<span class="symbol">y</span> != <span class="number">0</span>) &#123;</span><br><span class="line">            sum += tree[<span class="symbol">x</span>][<span class="symbol">y</span>];</span><br><span class="line">            <span class="symbol">y</span> -= lowbit(<span class="symbol">y</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="symbol">x</span> -= lowbit(<span class="symbol">x</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在范围修改时，同样需要将树状数组定义为每个元素与前一个元素的差。在一维数组中，sum[i] = sum[i - 1] + a[i], tree[i] = a[i] - a[i - 1]。那么，在二维数组中 tree[x][y] 该如何定义呢？</p>
+<!-- ![image](http://note.youdao.com/yws/res/16066/WEBRESOURCE19a44e90abf7330e5eba548114156e5a) -->
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree-2d-1.png">
+
+<p>这与前缀和的定义有关，如图所示，二维数组的前缀和 sum[x][y] 与 sum[x - 1][y - 1] 的关系表示为 $$ sum[x, y] = sum[x - 1][y] + sum[x][y - 1] - sum[x - 1][y - 1] + a[x][y]$$<br>对应地，tree[x][y] 即可表示为$$ tree[x][y] = a[x][y] - a[x - 1][y] - a[x][y - 1] + a[x - 1][y - 1]$$</p>
+<p>跟一维数组一样，对原数组的单点查询即为该点的前缀和。</p>
+<p>那剩下的问题是如何做范围修改？</p>
+<!-- ![image](https://note.youdao.com/src/WEBRESOURCEd2881a7cc5d26771df936979c86e3a68) -->
+
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree-2d.png">
+
+<p>假设要在 (x, y) 和 (m, n) （假设 $m \ge x, y \ge n$） 之间加上一个数 z。如果在 tree[x][y] 处加上 z，它影响的范围是 $i \ge x || j \ge y$ 的部分(图中标号为 1)。</p>
+<ul>
+<li>tree[x][y] + z 影响图中标号为 1 的部分</li>
+<li>tree[x][n + 1] - z 影响图中标号 2 的部分</li>
+<li>tree[m + 1][y] - z 影响图中标号为 3 的部分</li>
+<li>tree[m + 1][n + 1] + z 影响图中标号为 4 的部分</li>
+</ul>
+<p>为了消除对 $i &gt; m || j &gt; n$ 的影响（这部分超出了我们的逾期），我们需要在 tree[x][n + 1] 和 tree[m + 1][y] 处减去 z，再在 tree[m + 1][n + 1] 处加上 z 以补偿减了两次的 i &gt; m &amp;&amp; j &gt; n 区域。</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">public void range<span class="constructor">Add(<span class="params">int</span> <span class="params">x1</span>, <span class="params">int</span> <span class="params">y1</span>, <span class="params">int</span> <span class="params">x2</span>, <span class="params">int</span> <span class="params">y2</span>, <span class="params">int</span> <span class="params">val</span>)</span> &#123;</span><br><span class="line">    add(x1, y1, <span class="keyword">val</span>);</span><br><span class="line">    add(x1, y2 + <span class="number">1</span>, -<span class="keyword">val</span>);</span><br><span class="line">    add(x2 + <span class="number">1</span>, y1, -<span class="keyword">val</span>);</span><br><span class="line">    add(x2 + <span class="number">1</span>, y2 + <span class="number">1</span>, <span class="keyword">val</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>范围修改配合范围查询在二维数组下更加复杂了。定义二维数组的前缀和为 sum(x, y)，那么有<br>$$sum(x, y) = \sum_{i = 1}^{x}\sum_{j = 1}^{y}\sum_{k = 1}^{i}\sum_{h = 1}^{j} tree[k][h]$$</p>
+<p>同一维数组时一样，将它展开可以得到：<br>$$sum(x, y) = (x + 1) * (y + 1) * \sum_{i = 1}^{x}\sum_{j = 1}^{y} tree[i][j] - (y + 1) * \sum_{i = 1}^{x}\sum_{j = 1}^{y} tree[i][j] * i - (x + 1) * \sum_{i = 1}^{x}\sum_{j = 1}^{y} tree[i][j] * j + \sum_{i = 1}^{x}\sum_{j = 1}^{y} tree[i][j] * i * j$$</p>
+<p>因此，我们可以维护四个树状数组：tree[i][j],tree[i][j] * i,tree[i][j] * j, tree[i][j] * i * j。</p>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">void add(int <span class="symbol">x</span>, int <span class="symbol">y</span>, int v) &#123;</span><br><span class="line">    int x0 = <span class="symbol">x</span>, y0 = <span class="symbol">y</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="symbol">x</span> &lt; n) &#123;</span><br><span class="line">        <span class="symbol">y</span> = y0;</span><br><span class="line">        <span class="keyword">while</span>(<span class="symbol">y</span> &lt; n) &#123;</span><br><span class="line">            t1[<span class="symbol">x</span>][<span class="symbol">y</span>] += v;</span><br><span class="line">            t2[<span class="symbol">x</span>][<span class="symbol">y</span>] += v * x0;</span><br><span class="line">            t3[<span class="symbol">x</span>][<span class="symbol">y</span>] += v * y0;</span><br><span class="line">            t4[<span class="symbol">x</span>][<span class="symbol">y</span>] += v * x0 * y0;</span><br><span class="line">            <span class="symbol">y</span> += lowbit(<span class="symbol">y</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="symbol">x</span> += lowbit(<span class="symbol">x</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void rangeAdd(int x1, int y1, int x2, int y2, int val) &#123;</span><br><span class="line">    add(x1, y1, val);</span><br><span class="line">    add(x1, y2 + <span class="number">1</span>, -val);</span><br><span class="line">    add(x2 + <span class="number">1</span>, y1, -val);</span><br><span class="line">    add(x2 + <span class="number">1</span>, y2 + <span class="number">1</span>, val);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int prefixSum(int <span class="symbol">x</span>, int <span class="symbol">y</span>) &#123;</span><br><span class="line">    int sum = <span class="number">0</span>, x0 = <span class="symbol">x</span> + <span class="number">1</span>, y0 = <span class="symbol">y</span> + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="symbol">x</span> != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="symbol">y</span> = y0 - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (<span class="symbol">y</span> != <span class="number">0</span>) &#123;</span><br><span class="line">            sum += x0 * y0 * t1[<span class="symbol">x</span>][<span class="symbol">y</span>] - y0 * t2[<span class="symbol">x</span>][<span class="symbol">y</span>]</span><br><span class="line">                    - x0 * t3[<span class="symbol">x</span>][<span class="symbol">y</span>] + t4[<span class="symbol">x</span>][<span class="symbol">y</span>];</span><br><span class="line">            <span class="symbol">y</span> -= lowbit(<span class="symbol">y</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="symbol">x</span> -= lowbit(<span class="symbol">x</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>二维数组的完整代码见 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3NxLXpoYW5nL3NxLWNvZGUtc29sdXRpb25zL3RyZWUvbWFzdGVyL2RhdGFzdHJ1Y3R1cmUvZmVud2lja3RyZWU=">Github 仓库<i class="fa fa-external-link-alt"></i></span>。</p>
+<h1 id="D-例题"><a href="#D-例题" class="headerlink" title="D. 例题"></a>D. 例题</h1><ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzA=">树状数组 1：单点修改，区间查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzE=">树状数组 2：区间修改，单点查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzI=">树状数组 3：区间修改，区间查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzM=">二维树状数组 1：单点修改，区间查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzU=">二维树状数组 3：区间修改，区间查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9jcC1hbGdvcml0aG1zLmNvbS9kYXRhX3N0cnVjdHVyZXMvZmVud2ljay5odG1s">SPOJ 相关题目 Practice Problems<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+<h1 id="E-参考资料"><a href="#E-参考资料" class="headerlink" title="E. 参考资料"></a>E. 参考资料</h1><ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly9jcC1hbGdvcml0aG1zLmNvbS9kYXRhX3N0cnVjdHVyZXMvZmVud2ljay5odG1s">Fenwick Tree<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9vaS13aWtpLm9yZy9kcy9mZW53aWNrLw==">OI-WIKI 树状数组<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvRmVud2lja190cmVl">Wikipedia Fenwick Tree<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vUmFiYml0SHUvcC9CSVQuaHRtbA==">“高级”数据结构——树状数组<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>Data Structure</tag>
+        <tag>Fenwick Tree</tag>
+        <tag>Computer Science</tag>
+      </tags>
+  </entry>
 </search>

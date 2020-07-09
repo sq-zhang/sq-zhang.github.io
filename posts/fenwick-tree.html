@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+<meta name="google-site-verification" content="czg1YrWlneWoQ8iv8DKMIXT9caP52xXoC0QMKP90zBo" />
+<meta name="baidu-site-verification" content="86fFCLCrNt" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"sq-zhang.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="树状数组 Fenwick Tree 是常用的数据结构，它在范围查询方面有较好的应用，能在 O(log n) 时间内完成范围的修改和查询。本文将介绍树状数组的工作原理、应用场景以及 OJ 例题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构之树状数组 Fenwick Tree">
+<meta property="og:url" content="https://sq-zhang.github.io/posts/fenwick-tree.html">
+<meta property="og:site_name" content="浅前的博客">
+<meta property="og:description" content="树状数组 Fenwick Tree 是常用的数据结构，它在范围查询方面有较好的应用，能在 O(log n) 时间内完成范围的修改和查询。本文将介绍树状数组的工作原理、应用场景以及 OJ 例题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree.png">
+<meta property="og:image" content="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree-2d-1.png">
+<meta property="og:image" content="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree-2d.png">
+<meta property="article:published_time" content="2020-07-09T12:53:45.000Z">
+<meta property="article:modified_time" content="2020-07-09T13:20:58.518Z">
+<meta property="article:author" content="sq-zhang">
+<meta property="article:tag" content="数据结构，树状数组，范围和，Fenwick Tree">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree.png">
+
+<link rel="canonical" href="https://sq-zhang.github.io/posts/fenwick-tree.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数据结构之树状数组 Fenwick Tree | 浅前的博客</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-170167173-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a615cbf4cd9d874e95fd0cb47ab3841a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">浅前的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">If you can’t explain it simply, you don’t understand it well enough.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">10</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">12</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3NxLXpoYW5n" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sq-zhang.github.io/posts/fenwick-tree.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="sq-zhang">
+      <meta itemprop="description" content="If you can’t explain it simply, you don’t understand it well enough.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="浅前的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构之树状数组 Fenwick Tree
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-07-09 20:53:45 / 修改时间：21:20:58" itemprop="dateCreated datePublished" datetime="2020-07-09T20:53:45+08:00">2020-07-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/fenwick-tree.html" class="post-meta-item leancloud_visitors" data-flag-title="数据结构之树状数组 Fenwick Tree" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+            <div class="post-description">树状数组 Fenwick Tree 是常用的数据结构，它在范围查询方面有较好的应用，能在 O(log n) 时间内完成范围的修改和查询。本文将介绍树状数组的工作原理、应用场景以及 OJ 例题。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="A-简介"><a href="#A-简介" class="headerlink" title="A. 简介"></a>A. 简介</h1><p>树状数组 Fenwick Tree，是由 Peter M. Fenwick 在 1994 年发表的论文 《A new data structure for cumulative frequency tables》中提出的一种数据结构。</p>
+<p>它的应用场景是数组，假设长度为 n，它有以下特性：</p>
+<ol>
+<li>O(n) 时间内构造树状数组</li>
+<li>O(log n) 时间内计算 [l, r] 范围内的 f 值（f 是一种函数，比如 sum，max，min 等）</li>
+<li>O(log n) 时间内更新数组的值</li>
+<li>需要 O(N) 存储空间</li>
+<li>实现简单，场景可拓宽到多维数组</li>
+</ol>
+<h1 id="B-原理"><a href="#B-原理" class="headerlink" title="B. 原理"></a>B. 原理</h1><p>树状数组的基本思想是分治，用一个节点表示多个节点的值，那样在查询时只需查询大节点，而不用查询每个节点。</p>
+<!-- ![image](http://note.youdao.com/yws/res/15707/WEBRESOURCEa074c4c7fa45449099de05a540a18f19) -->
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree.png">
+
+<p>比如，在上图中，数组 tree 是一个表示范围和的树状数组。在该数组中：</p>
+<ul>
+<li>tree[8] 代表全部 8 个数</li>
+<li>tree[6] 代表 a[5] 和 a[6]</li>
+<li>tree[4] 代表 a[1]、a[2]、a[3]、a[4]</li>
+<li>tree[2] 代表 a[1]、a[2]</li>
+<li>tree[1]、tree[3]、tree[5]、tree[7] 只代表本身</li>
+</ul>
+<p>细心的你可以发现，对于 i，假设它的二进制表示中最右一个 1 的位置为 p，那么 tree[i] 代表的个数为 $2^p$（所以 tree 的下标是从 1 开始的，因为 0 不存在二进制为 1 的位）。比如</p>
+<ul>
+<li>i = 3(101)，最右一个 1 位于第 0 位，tree[3] 代表一个数，也就是 a[3] 本身。</li>
+<li>i = 4(100)，最右一个 1 位于第 2 位，tree[4] 代表 4 个数，也就是 a[1]、a[2]、a[3]、a[4]。</li>
+</ul>
+<p>i &amp; (-i) = i 代表的个数 $2^p$。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="场景一：单点修改，区间查询"><a href="#场景一：单点修改，区间查询" class="headerlink" title="场景一：单点修改，区间查询"></a>场景一：单点修改，区间查询</h2><blockquote>
+<p>场景：多次修改单点，求范围和</p>
+</blockquote>
+<p><strong>初始化 O(n)</strong></p>
+<p>从树状数组的定义可知，每一个节点与子节点的值直接相关。因此可以从底向上更新父节点的值。i 的父节点为 i + i &amp; (-i)。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">void init(int[] a) &#123;</span><br><span class="line">    int n = a.<span class="built_in">length</span> + <span class="number">1</span>;</span><br><span class="line">    tree = new int[n];</span><br><span class="line">    <span class="keyword">for</span>(int <span class="built_in">i</span> = <span class="number">1</span>;<span class="built_in">i</span> &lt; n;<span class="built_in">i</span>++) &#123;</span><br><span class="line">        tree[<span class="built_in">i</span>] = a[<span class="built_in">i</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">1</span>; <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) &#123;</span><br><span class="line">        int <span class="built_in">pi</span> = <span class="built_in">i</span> + lowbit(<span class="built_in">i</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">pi</span> &lt; n) &#123;</span><br><span class="line">            tree[<span class="built_in">pi</span>] += tree[<span class="built_in">i</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int lowbit(int <span class="built_in">i</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">i</span> &amp; -<span class="built_in">i</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>范围查询 O(log n)</strong></p>
+<p>范围查询包括前缀和和范围和。范围和可通过前缀和计算得到。</p>
+<p>对于前缀和，根据定义，计算 i 的前缀和的过程也是遍历 i -&gt; 1 的过程，原始的遍历计算是 O(n) 的时间，使用树状数组的遍历时间为 O(log n)。</p>
+<p>以 i = 6 为例，遍历的第一个节点是 tree[6]，它代表 5，6 两个数，因此下一个节点是 tree[4]，它代表 4 个数，到达 tree[0] 结束。因此 i = 6 的前缀和为 tree[6] + tree[4]。</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> prefixSum(<span class="keyword">int</span> i) &#123;</span><br><span class="line">    <span class="keyword">int</span> <span class="keyword">sum</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">sum</span> += tree[i];</span><br><span class="line">        i -= lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">sum</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>假设查询的范围为 [left ,right]，那么 $$sum(left, right) = prefixSum(right) - prefixSum(left - 1)$$</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> <span class="built_in">sum</span>(<span class="built_in">int</span> <span class="built_in">left</span>, <span class="built_in">int</span> <span class="built_in">right</span>) &#123;</span><br><span class="line">    return prefixSum(<span class="built_in">right</span>) - prefixSum(<span class="built_in">left</span> - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>单点修改 O(log n)</strong></p>
+<p>单点修改需要递归地修改它的父节点。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void add(int <span class="built_in">i</span>, long v) &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">i</span> &lt; n) &#123;</span><br><span class="line">        tree[<span class="built_in">i</span>] += v;</span><br><span class="line">        <span class="built_in">i</span> += lowbit(<span class="built_in">i</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="场景二：区间修改，单点查询"><a href="#场景二：区间修改，单点查询" class="headerlink" title="场景二：区间修改，单点查询"></a>场景二：区间修改，单点查询</h2><blockquote>
+<p>场景：多次区间修改，求单点值</p>
+</blockquote>
+<p>通过将树状数组定义为每个元素与前一个元素的差，那么它的前缀和和就等于原数组。这样一来，单点查询转变为范围查询，这与场景一相同。区间修改可通过修改树状数组的两个单点实现。所以场景二本质上与场景一相同，只是树状数组定义不同。</p>
+<p><strong>初始化 O(n)</strong></p>
+<p>构建树状数组的过程与场景一相同，初始值改为每个元素与前一个元素的差值。<br>设原数组为 a[i]，那么树状数组 tree[i] = a[i] - a[i - 1](a[0] = 0)。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">void init() &#123;</span><br><span class="line">    n = a.<span class="built_in">length</span> + <span class="number">1</span>;</span><br><span class="line">    tree = new int[n];</span><br><span class="line">    <span class="keyword">for</span>(int <span class="built_in">i</span> = <span class="number">1</span>;<span class="built_in">i</span> &lt; n;<span class="built_in">i</span>++) &#123;</span><br><span class="line">        tree[<span class="built_in">i</span>] = a[<span class="built_in">i</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">1</span>; <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) &#123;</span><br><span class="line">        int <span class="built_in">pi</span> = <span class="built_in">i</span> + lowbit(<span class="built_in">i</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">pi</span> &lt; n) &#123;</span><br><span class="line">            tree[<span class="built_in">pi</span>] += tree[<span class="built_in">i</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>单点查询 O(log n)</strong></p>
+<p>改变树状数组的定义后，单点查询等同于场景一的范围查询，代码见场景一的 prefixSum 函数。<br>$$a[i] = \sum_{j = 1}^{i} tree[j]$$</p>
+<p><strong>范围修改 O(log n)</strong></p>
+<p>假设要给区间 [l, r] 加上 x，根据树状数组的定义，只需给 tree[l] 加上 x，给 tree[r + 1] 减去 x。因为给 tree[l] 加上 x ，相当于给所有的 a[i] (i &gt;= l) 都加上了 x。再给 tree[r + 1] 减去 x，把对 i &gt; r 的影响消除，从而实现了给区间 [l, r] 加上 x。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> range<span class="keyword">Add</span>(<span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> x) &#123;</span><br><span class="line">    <span class="keyword">add</span>(l, x);</span><br><span class="line">    <span class="keyword">add</span>(r + <span class="number">1</span>, -x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="keyword">add</span>(<span class="type">int</span> i, <span class="type">int</span> x) &#123;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; n) &#123;</span><br><span class="line">        tree[i] += x;</span><br><span class="line">        i += lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="场景三：区间修改，区间查询"><a href="#场景三：区间修改，区间查询" class="headerlink" title="场景三：区间修改，区间查询"></a>场景三：区间修改，区间查询</h2><blockquote>
+<p>场景：多次区间修改，求范围和</p>
+</blockquote>
+<p>场景三是基于场景二来完成的，同样将树状数组定义为每个元素与前一个元素的差。那么前缀和就可表示为 $$sum(p) = \sum_{i = 1}^{p} \sum_{j = 1}^{i} tree[j]$$</p>
+<p>观察可以发现，tree[j] 被加上的次数等于 p - i + 1。所以前缀和还可以表示为 $$sum(p) = \sum_{i = 1}^{p} tree[i] * (p - i + 1) = (p + 1) * \sum_{i = 1}^{p} tree[i] - \sum_{i = 1}^{p} tree[i] * i$$</p>
+<p>惊喜的看到，前缀和可以由另外两个数组的前缀和表示。<br>所以，可以通过维护 tree[i] 与 tree[i] * i 的树状数组来求范围和。</p>
+<p><strong>初始化 O(n)</strong><br>根据上面的分析，我们要维护 tree[i] 与 tree[i] * i 的树状数组，树状数组的初始化都是一样的, 要注意的是 tree2[i] = tree1[i] * i。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">void init(int[] a) &#123;</span><br><span class="line">    n = a.<span class="built_in">length</span> + <span class="number">1</span>;</span><br><span class="line">    tree1 = new int[n];</span><br><span class="line">    tree2 = new int[n];</span><br><span class="line">    <span class="keyword">for</span>(int <span class="built_in">i</span> = <span class="number">1</span>;<span class="built_in">i</span> &lt; n;<span class="built_in">i</span>++) &#123;</span><br><span class="line">        tree1[<span class="built_in">i</span>] = <span class="built_in">i</span> == <span class="number">1</span> ? a[<span class="number">0</span>] : a[<span class="built_in">i</span> - <span class="number">1</span>] - a[<span class="built_in">i</span> - <span class="number">2</span>];</span><br><span class="line">        tree2[<span class="built_in">i</span>] = <span class="built_in">i</span> * tree1[<span class="built_in">i</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">1</span>; <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) &#123;</span><br><span class="line">        int <span class="built_in">pi</span> = <span class="built_in">i</span> + lowbit(<span class="built_in">i</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">pi</span> &lt; n) &#123;</span><br><span class="line">            tree1[<span class="built_in">pi</span>] += tree1[<span class="built_in">i</span>];</span><br><span class="line">            tree2[<span class="built_in">pi</span>] += tree2[<span class="built_in">i</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>范围查询 O(log n)</strong><br>位置 p 的前缀和即等于 (p + 1) * tree1 的前缀和 - tree2 的前缀和。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> prefixSum(<span class="built_in">int</span> p) &#123;</span><br><span class="line">    <span class="built_in">int</span> sum = <span class="number">0</span>, i = p;</span><br><span class="line">    <span class="keyword">while</span> (i != <span class="number">0</span>) &#123;</span><br><span class="line">        sum += tree1[i] * (p + <span class="number">1</span>) - tree2[i];</span><br><span class="line">        i -= lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>范围修改 O(log n)</strong><br>范围修改同场景二，同样基于单点修改。单点修改时要同时修改 tree1 和 tree2。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="keyword">add</span>(<span class="type">int</span> p, <span class="type">int</span> x) &#123;</span><br><span class="line">    <span class="type">int</span> i = p;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; n) &#123;</span><br><span class="line">        tree1[i] += x;</span><br><span class="line">        tree2[i] += x * p;</span><br><span class="line">        i += lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> range<span class="keyword">Add</span>(<span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> x) &#123;</span><br><span class="line">    <span class="keyword">add</span>(l, x);</span><br><span class="line">    <span class="keyword">add</span>(r + <span class="number">1</span>, -x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="C-推广到二维数组"><a href="#C-推广到二维数组" class="headerlink" title="C. 推广到二维数组"></a>C. 推广到二维数组</h1><p>在一维数组中，tree[i] 表示的是长度为 lowbit(i)，终点为 i 的范围和。那么，在二维数组中，tree[x][y] 表示长为 lowbit(x)，宽为 lowbit(y)，右下角为 (x, y) 的矩阵和。</p>
+<p>相应的二维树状数组的单点修改和区间查询都需要加上一个维度。</p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">void add(int <span class="symbol">x</span>, int <span class="symbol">y</span>, int v) &#123;</span><br><span class="line">    int y0 = <span class="symbol">y</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="symbol">x</span> &lt; n) &#123;</span><br><span class="line">        <span class="symbol">y</span> = y0;</span><br><span class="line">        <span class="keyword">while</span>(<span class="symbol">y</span> &lt; n) &#123;</span><br><span class="line">            tree[<span class="symbol">x</span>][<span class="symbol">y</span>] += v;</span><br><span class="line">            <span class="symbol">y</span> += lowbit(<span class="symbol">y</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="symbol">x</span> += lowbit(<span class="symbol">x</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int prefixSum(int <span class="symbol">x</span>, int <span class="symbol">y</span>) &#123;</span><br><span class="line">    int sum = <span class="number">0</span>, y0 = <span class="symbol">y</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="symbol">x</span> != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="symbol">y</span> = y0;</span><br><span class="line">        <span class="keyword">while</span> (<span class="symbol">y</span> != <span class="number">0</span>) &#123;</span><br><span class="line">            sum += tree[<span class="symbol">x</span>][<span class="symbol">y</span>];</span><br><span class="line">            <span class="symbol">y</span> -= lowbit(<span class="symbol">y</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="symbol">x</span> -= lowbit(<span class="symbol">x</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在范围修改时，同样需要将树状数组定义为每个元素与前一个元素的差。在一维数组中，sum[i] = sum[i - 1] + a[i], tree[i] = a[i] - a[i - 1]。那么，在二维数组中 tree[x][y] 该如何定义呢？</p>
+<!-- ![image](http://note.youdao.com/yws/res/16066/WEBRESOURCE19a44e90abf7330e5eba548114156e5a) -->
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree-2d-1.png">
+
+<p>这与前缀和的定义有关，如图所示，二维数组的前缀和 sum[x][y] 与 sum[x - 1][y - 1] 的关系表示为 $$ sum[x, y] = sum[x - 1][y] + sum[x][y - 1] - sum[x - 1][y - 1] + a[x][y]$$<br>对应地，tree[x][y] 即可表示为$$ tree[x][y] = a[x][y] - a[x - 1][y] - a[x][y - 1] + a[x - 1][y - 1]$$</p>
+<p>跟一维数组一样，对原数组的单点查询即为该点的前缀和。</p>
+<p>那剩下的问题是如何做范围修改？</p>
+<!-- ![image](https://note.youdao.com/src/WEBRESOURCEd2881a7cc5d26771df936979c86e3a68) -->
+
+<img src="http://qcn3yr1zw.bkt.clouddn.com/static/images/fenwicktree-2d.png">
+
+<p>假设要在 (x, y) 和 (m, n) （假设 $m \ge x, y \ge n$） 之间加上一个数 z。如果在 tree[x][y] 处加上 z，它影响的范围是 $i \ge x || j \ge y$ 的部分(图中标号为 1)。</p>
+<ul>
+<li>tree[x][y] + z 影响图中标号为 1 的部分</li>
+<li>tree[x][n + 1] - z 影响图中标号 2 的部分</li>
+<li>tree[m + 1][y] - z 影响图中标号为 3 的部分</li>
+<li>tree[m + 1][n + 1] + z 影响图中标号为 4 的部分</li>
+</ul>
+<p>为了消除对 $i &gt; m || j &gt; n$ 的影响（这部分超出了我们的逾期），我们需要在 tree[x][n + 1] 和 tree[m + 1][y] 处减去 z，再在 tree[m + 1][n + 1] 处加上 z 以补偿减了两次的 i &gt; m &amp;&amp; j &gt; n 区域。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public void range<span class="constructor">Add(<span class="params">int</span> <span class="params">x1</span>, <span class="params">int</span> <span class="params">y1</span>, <span class="params">int</span> <span class="params">x2</span>, <span class="params">int</span> <span class="params">y2</span>, <span class="params">int</span> <span class="params">val</span>)</span> &#123;</span><br><span class="line">    add(x1, y1, <span class="keyword">val</span>);</span><br><span class="line">    add(x1, y2 + <span class="number">1</span>, -<span class="keyword">val</span>);</span><br><span class="line">    add(x2 + <span class="number">1</span>, y1, -<span class="keyword">val</span>);</span><br><span class="line">    add(x2 + <span class="number">1</span>, y2 + <span class="number">1</span>, <span class="keyword">val</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>范围修改配合范围查询在二维数组下更加复杂了。定义二维数组的前缀和为 sum(x, y)，那么有<br>$$sum(x, y) = \sum_{i = 1}^{x}\sum_{j = 1}^{y}\sum_{k = 1}^{i}\sum_{h = 1}^{j} tree[k][h]$$</p>
+<p>同一维数组时一样，将它展开可以得到：<br>$$sum(x, y) = (x + 1) * (y + 1) * \sum_{i = 1}^{x}\sum_{j = 1}^{y} tree[i][j] - (y + 1) * \sum_{i = 1}^{x}\sum_{j = 1}^{y} tree[i][j] * i - (x + 1) * \sum_{i = 1}^{x}\sum_{j = 1}^{y} tree[i][j] * j + \sum_{i = 1}^{x}\sum_{j = 1}^{y} tree[i][j] * i * j$$</p>
+<p>因此，我们可以维护四个树状数组：tree[i][j],tree[i][j] * i,tree[i][j] * j, tree[i][j] * i * j。</p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">void add(int <span class="symbol">x</span>, int <span class="symbol">y</span>, int v) &#123;</span><br><span class="line">    int x0 = <span class="symbol">x</span>, y0 = <span class="symbol">y</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="symbol">x</span> &lt; n) &#123;</span><br><span class="line">        <span class="symbol">y</span> = y0;</span><br><span class="line">        <span class="keyword">while</span>(<span class="symbol">y</span> &lt; n) &#123;</span><br><span class="line">            t1[<span class="symbol">x</span>][<span class="symbol">y</span>] += v;</span><br><span class="line">            t2[<span class="symbol">x</span>][<span class="symbol">y</span>] += v * x0;</span><br><span class="line">            t3[<span class="symbol">x</span>][<span class="symbol">y</span>] += v * y0;</span><br><span class="line">            t4[<span class="symbol">x</span>][<span class="symbol">y</span>] += v * x0 * y0;</span><br><span class="line">            <span class="symbol">y</span> += lowbit(<span class="symbol">y</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="symbol">x</span> += lowbit(<span class="symbol">x</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void rangeAdd(int x1, int y1, int x2, int y2, int val) &#123;</span><br><span class="line">    add(x1, y1, val);</span><br><span class="line">    add(x1, y2 + <span class="number">1</span>, -val);</span><br><span class="line">    add(x2 + <span class="number">1</span>, y1, -val);</span><br><span class="line">    add(x2 + <span class="number">1</span>, y2 + <span class="number">1</span>, val);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int prefixSum(int <span class="symbol">x</span>, int <span class="symbol">y</span>) &#123;</span><br><span class="line">    int sum = <span class="number">0</span>, x0 = <span class="symbol">x</span> + <span class="number">1</span>, y0 = <span class="symbol">y</span> + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="symbol">x</span> != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="symbol">y</span> = y0 - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (<span class="symbol">y</span> != <span class="number">0</span>) &#123;</span><br><span class="line">            sum += x0 * y0 * t1[<span class="symbol">x</span>][<span class="symbol">y</span>] - y0 * t2[<span class="symbol">x</span>][<span class="symbol">y</span>]</span><br><span class="line">                    - x0 * t3[<span class="symbol">x</span>][<span class="symbol">y</span>] + t4[<span class="symbol">x</span>][<span class="symbol">y</span>];</span><br><span class="line">            <span class="symbol">y</span> -= lowbit(<span class="symbol">y</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="symbol">x</span> -= lowbit(<span class="symbol">x</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>二维数组的完整代码见 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3NxLXpoYW5nL3NxLWNvZGUtc29sdXRpb25zL3RyZWUvbWFzdGVyL2RhdGFzdHJ1Y3R1cmUvZmVud2lja3RyZWU=">Github 仓库<i class="fa fa-external-link-alt"></i></span>。</p>
+<h1 id="D-例题"><a href="#D-例题" class="headerlink" title="D. 例题"></a>D. 例题</h1><ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzA=">树状数组 1：单点修改，区间查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzE=">树状数组 2：区间修改，单点查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzI=">树状数组 3：区间修改，区间查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzM=">二维树状数组 1：单点修改，区间查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9sb2ouYWMvcHJvYmxlbS8xMzU=">二维树状数组 3：区间修改，区间查询<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9jcC1hbGdvcml0aG1zLmNvbS9kYXRhX3N0cnVjdHVyZXMvZmVud2ljay5odG1s">SPOJ 相关题目 Practice Problems<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+<h1 id="E-参考资料"><a href="#E-参考资料" class="headerlink" title="E. 参考资料"></a>E. 参考资料</h1><ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly9jcC1hbGdvcml0aG1zLmNvbS9kYXRhX3N0cnVjdHVyZXMvZmVud2ljay5odG1s">Fenwick Tree<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9vaS13aWtpLm9yZy9kcy9mZW53aWNrLw==">OI-WIKI 树状数组<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvRmVud2lja190cmVl">Wikipedia Fenwick Tree<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vUmFiYml0SHUvcC9CSVQuaHRtbA==">“高级”数据结构——树状数组<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>如发现错误或遗漏，请在下方评论或联系我</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="sq-zhang 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>sq-zhang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://sq-zhang.github.io/posts/fenwick-tree.html" title="数据结构之树状数组 Fenwick Tree">https://sq-zhang.github.io/posts/fenwick-tree.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Data-Structure/" rel="tag"><i class="fa fa-tag"></i> Data Structure</a>
+              <a href="/tags/Fenwick-Tree/" rel="tag"><i class="fa fa-tag"></i> Fenwick Tree</a>
+              <a href="/tags/Computer-Science/" rel="tag"><i class="fa fa-tag"></i> Computer Science</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/codeforces-global-round-9-solutions.html" rel="prev" title="Codeforces Global Round 9 A - G 题解">
+      <i class="fa fa-chevron-left"></i> Codeforces Global Round 9 A - G 题解
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#A-简介"><span class="nav-number">1.</span> <span class="nav-text">A. 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B-原理"><span class="nav-number">2.</span> <span class="nav-text">B. 原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">3.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#场景一：单点修改，区间查询"><span class="nav-number">3.1.</span> <span class="nav-text">场景一：单点修改，区间查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景二：区间修改，单点查询"><span class="nav-number">3.2.</span> <span class="nav-text">场景二：区间修改，单点查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景三：区间修改，区间查询"><span class="nav-number">3.3.</span> <span class="nav-text">场景三：区间修改，区间查询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-推广到二维数组"><span class="nav-number">4.</span> <span class="nav-text">C. 推广到二维数组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#D-例题"><span class="nav-number">5.</span> <span class="nav-text">D. 例题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#E-参考资料"><span class="nav-number">6.</span> <span class="nav-text">E. 参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sq-zhang"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">sq-zhang</p>
+  <div class="site-description" itemprop="description">If you can’t explain it simply, you don’t understand it well enough.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sq-zhang</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">72k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:01</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"iFCGO3MEboacRuV5wDmgpaF0-gzGzoHsz","app_key":"672zyRsPmDRQdGx2jwJUaS6V","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://sq-zhang.github.io/posts/fenwick-tree.html',]
+      });
+      });
+  </script>
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://sq-zhang.github.io/posts/fenwick-tree.html";
+    this.page.identifier = "posts/fenwick-tree.html";
+    this.page.title = "数据结构之树状数组 Fenwick Tree";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://wwwshiqianme.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

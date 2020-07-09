@@ -1,3 +1,4 @@
+https://sq-zhang.github.io/posts/fenwick-tree.html
 https://sq-zhang.github.io/posts/codeforces-global-round-9-solutions.html
 https://sq-zhang.github.io/posts/atcoder-beginner-contest-173-solutions.html
 https://sq-zhang.github.io/posts/leetcode-weekly-196-solutions.html
